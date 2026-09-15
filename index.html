@@ -3,477 +3,286 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#050507">
 <title>Geometry Rush</title>
 
 <style>
 *{
   box-sizing:border-box;
-  margin:0;
-  padding:0;
   -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
+  margin:0;
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#050507;
+  background:#030305;
   color:white;
   font-family:Arial,Helvetica,sans-serif;
 }
 
+body{
+  user-select:none;
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+#ui{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+.top{
+  position:absolute;
+  top:15px;
+  left:15px;
+  right:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  font-weight:1000;
+  font-size:22px;
+  letter-spacing:2px;
+  text-shadow:0 0 15px #45ff9a;
+}
+
+.stats{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.stat{
+  padding:9px 13px;
+  border:1px solid #26352e;
+  background:rgba(5,10,8,.78);
+  border-radius:12px;
+  backdrop-filter:blur(10px);
+  font-weight:800;
+  font-size:13px;
+}
+
+.green{
+  color:#45ff9a;
+}
+
+.orange{
+  color:#ff9b21;
+}
+
+#status{
+  position:absolute;
+  top:72px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:12px;
+  letter-spacing:3px;
+  opacity:.65;
+}
+
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:auto;
+  background:
+    radial-gradient(circle at 50% 40%,rgba(69,255,154,.09),transparent 35%),
+    rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);
+}
+
+.panel{
+  width:min(650px,92vw);
+  max-height:90vh;
+  overflow:auto;
+  padding:30px;
+  border:1px solid #26352e;
+  border-radius:25px;
+  background:rgba(7,10,9,.94);
+  box-shadow:
+    0 0 80px rgba(69,255,154,.1),
+    inset 0 0 30px rgba(69,255,154,.025);
+}
+
+h1{
+  margin:0 0 8px;
+  font-size:48px;
+  line-height:1;
+  letter-spacing:-2px;
+}
+
+h2{
+  margin:0 0 15px;
+}
+
+.subtitle{
+  color:#87928c;
+  margin-bottom:25px;
+}
+
 button{
+  pointer-events:auto;
   border:0;
-  font:inherit;
   cursor:pointer;
+  color:white;
+  background:#111815;
+  border:1px solid #2d4237;
+  padding:13px 17px;
+  border-radius:13px;
+  font-weight:900;
+  transition:.15s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  border-color:#45ff9a;
+  box-shadow:0 0 20px rgba(69,255,154,.15);
+}
+
+.primary{
+  width:100%;
+  background:#45ff9a;
+  color:#031108;
+  border-color:#45ff9a;
+  box-shadow:0 0 25px rgba(69,255,154,.2);
+}
+
+.row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.loginInfo{
+  margin-top:15px;
+  color:#88938e;
+  font-size:13px;
+  text-align:center;
+}
+
+#gameButtons{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;
+  pointer-events:auto;
+}
+
+#jumpButton{
+  width:90px;
+  height:60px;
+  border-radius:18px;
+  background:#45ff9a;
+  color:#031108;
+  font-size:18px;
+  box-shadow:0 0 30px rgba(69,255,154,.2);
+}
+
+#menuButton{
+  height:60px;
 }
 
 .hidden{
   display:none!important;
 }
 
-/* ================= LOGIN ================= */
-
-#login{
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:
-    radial-gradient(circle at 50% 45%,rgba(0,255,140,.12),transparent 35%),
-    #050507;
-}
-
-.loginCard{
-  width:min(430px,92%);
-  padding:40px 28px;
-  text-align:center;
-  border-radius:28px;
-  background:rgba(12,14,16,.92);
-  border:1px solid rgba(69,255,154,.25);
-  box-shadow:
-    0 0 80px rgba(69,255,154,.1),
-    inset 0 0 50px rgba(255,255,255,.015);
-  backdrop-filter:blur(20px);
-}
-
-.logo{
-  font-size:clamp(38px,10vw,58px);
-  font-weight:1000;
-  letter-spacing:5px;
-  color:#45ff9a;
-  text-shadow:
-    0 0 20px #45ff9a,
-    0 0 60px rgba(69,255,154,.3);
-}
-
-.logoSub{
-  margin-top:8px;
-  color:#777;
-  letter-spacing:5px;
-  font-size:11px;
-}
-
-.google{
-  width:100%;
-  margin-top:32px;
-  padding:16px;
-  border-radius:14px;
-  background:#fff;
-  color:#111;
-  font-weight:900;
-}
-
-.loginError{
-  min-height:20px;
-  margin-top:15px;
-  color:#ff5b67;
-  font-size:13px;
-}
-
-/* ================= APP ================= */
-
-#game{
-  position:fixed;
-  inset:0;
-}
-
-canvas{
-  display:block;
-  width:100%;
-  height:100%;
-}
-
-/* ================= TOP HUD ================= */
-
-.top{
-  position:absolute;
-  z-index:20;
-  top:0;
-  left:0;
-  right:0;
-  height:90px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 20px;
-  background:linear-gradient(
-    to bottom,
-    rgba(0,0,0,.8),
-    transparent
-  );
-  pointer-events:none;
-}
-
-.brand{
-  color:#45ff9a;
-  font-size:15px;
-  font-weight:1000;
-  letter-spacing:4px;
-}
-
-.account{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.avatar{
-  width:37px;
-  height:37px;
-  border-radius:50%;
-  border:2px solid #45ff9a;
-}
-
-.name{
-  max-width:150px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:#aaa;
-  font-size:13px;
-}
-
-/* ================= HUD ================= */
-
-.hud{
-  position:absolute;
-  z-index:20;
-  top:90px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:10px;
-  pointer-events:none;
-}
-
-.stat{
-  min-width:105px;
-  padding:8px 14px;
-  text-align:center;
-  background:rgba(5,8,7,.72);
-  border:1px solid rgba(69,255,154,.2);
-  border-radius:13px;
-  backdrop-filter:blur(10px);
-}
-
-.statLabel{
-  color:#666;
-  font-size:8px;
-  letter-spacing:2px;
-}
-
-.statValue{
-  margin-top:3px;
-  color:#45ff9a;
-  font-size:21px;
-  font-weight:1000;
-}
-
-/* ================= START ================= */
-
-.start{
-  position:absolute;
-  z-index:10;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  text-align:center;
-  pointer-events:none;
-}
-
-.startTitle{
-  font-size:clamp(50px,12vw,110px);
-  font-weight:1000;
-  letter-spacing:10px;
-  color:#fff;
-  text-shadow:
-    0 0 10px #45ff9a,
-    0 0 40px rgba(69,255,154,.5);
-}
-
-.startTitle span{
-  color:#45ff9a;
-}
-
-.startHint{
-  margin-top:12px;
-  color:#777;
-  letter-spacing:3px;
-  font-size:11px;
-}
-
-/* ================= MENU ================= */
-
-.menu{
-  position:absolute;
-  z-index:30;
-  left:20px;
-  bottom:20px;
-  display:flex;
-  gap:8px;
-}
-
-.menu button{
-  padding:11px 15px;
-  color:#aaa;
-  background:rgba(8,10,10,.8);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-}
-
-.menu button:hover{
-  color:#45ff9a;
-  border-color:rgba(69,255,154,.3);
-}
-
-/* ================= OVER ================= */
-
-#gameOver{
-  position:absolute;
-  z-index:100;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:rgba(0,0,0,.72);
-  backdrop-filter:blur(12px);
-}
-
-.overCard{
-  width:min(430px,90%);
-  padding:32px;
-  text-align:center;
-  border-radius:25px;
-  background:#090b0c;
-  border:1px solid rgba(69,255,154,.2);
-}
-
-.overTitle{
-  color:#45ff9a;
-  font-size:38px;
-  font-weight:1000;
-  letter-spacing:3px;
-}
-
-.results{
-  margin:22px 0;
-  line-height:2;
-  color:#999;
-}
-
-.results strong{
-  color:white;
-}
-
-.mainBtn{
-  width:100%;
-  padding:15px;
-  border-radius:13px;
-  background:#45ff9a;
-  color:#031008;
-  font-weight:1000;
-}
-
-.darkBtn{
-  width:100%;
-  margin-top:9px;
-  padding:13px;
-  border-radius:13px;
-  color:#aaa;
-  background:#151718;
-}
-
-/* ================= MODALS ================= */
-
-.modal{
-  position:absolute;
-  z-index:200;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  background:rgba(0,0,0,.78);
-  backdrop-filter:blur(15px);
-}
-
-.modalCard{
-  width:min(700px,100%);
-  max-height:86vh;
-  overflow:auto;
-  padding:25px;
-  border-radius:24px;
-  background:#090b0c;
-  border:1px solid rgba(69,255,154,.22);
-}
-
-.modalHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.modalTitle{
-  color:#45ff9a;
-  font-size:25px;
-  font-weight:1000;
-  letter-spacing:2px;
-}
-
-.close{
-  width:36px;
-  height:36px;
-  border-radius:10px;
-  background:#151718;
-  color:#aaa;
-  font-size:22px;
-}
-
-/* ================= SHOP ================= */
-
-.shopGrid{
+.cards{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
+  grid-template-columns:repeat(auto-fit,minmax(125px,1fr));
+  gap:10px;
 }
 
 .skin{
-  padding:18px 12px;
-  text-align:center;
-  background:#0e1112;
-  border:1px solid rgba(255,255,255,.07);
+  border:1px solid #26352e;
   border-radius:16px;
+  padding:13px;
+  background:#090d0b;
+  text-align:center;
 }
 
-.skinIcon{
-  width:55px;
-  height:55px;
-  margin:4px auto 16px;
+.skinPreview{
+  width:45px;
+  height:45px;
+  margin:0 auto 10px;
   border-radius:9px;
-  transform:rotate(45deg);
+  box-shadow:0 0 22px currentColor;
 }
 
-.skinName{
-  font-size:13px;
-  font-weight:900;
-}
-
-.skinPrice{
-  margin:7px 0;
-  color:#666;
-  font-size:11px;
-}
-
-.skinBtn{
+.skin button{
   width:100%;
+  margin-top:8px;
   padding:9px;
-  border-radius:9px;
-  background:#45ff9a;
-  color:#06100a;
-  font-size:11px;
-  font-weight:900;
 }
-
-.skinBtn.selected{
-  background:#151718;
-  color:#45ff9a;
-}
-
-/* ================= RANKING ================= */
 
 .rank{
-  display:grid;
-  grid-template-columns:50px 1fr 120px;
-  align-items:center;
-  padding:13px;
-  margin-bottom:7px;
+  display:flex;
+  justify-content:space-between;
+  padding:10px 12px;
+  border-bottom:1px solid #18211c;
+  font-size:14px;
+}
+
+.rankMe{
+  background:rgba(69,255,154,.08);
+  border-radius:10px;
+}
+
+.small{
+  color:#718078;
+  font-size:12px;
+}
+
+#leaderboard{
+  margin-top:15px;
+}
+
+#error{
+  position:absolute;
+  left:50%;
+  bottom:20px;
+  transform:translateX(-50%);
+  background:#210909;
+  border:1px solid #612525;
+  padding:10px 14px;
   border-radius:12px;
-  background:#0e1112;
+  color:#ff8585;
+  font-size:13px;
+  max-width:90%;
+  text-align:center;
 }
-
-.rankPos{
-  color:#555;
-  font-weight:1000;
-}
-
-.rankName{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.rankScore{
-  text-align:right;
-  color:#45ff9a;
-  font-weight:1000;
-}
-
-/* ================= MOBILE ================= */
 
 @media(max-width:600px){
-
-  .top{
-    padding:12px;
+  h1{
+    font-size:38px;
   }
 
-  .name{
-    display:none;
+  .panel{
+    padding:22px;
   }
 
-  .hud{
-    top:78px;
-    gap:5px;
-  }
-
-  .stat{
-    min-width:76px;
-    padding:7px 6px;
-  }
-
-  .statValue{
+  .logo{
     font-size:17px;
   }
 
-  .statLabel{
-    font-size:7px;
-  }
-
-  .shopGrid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .menu{
-    left:10px;
-    bottom:10px;
-  }
-
-  .menu button{
-    padding:10px 11px;
+  .stat{
+    padding:7px 9px;
+    font-size:11px;
   }
 }
 </style>
@@ -481,206 +290,139 @@ canvas{
 
 <body>
 
-<!-- LOGIN -->
+<canvas id="game"></canvas>
 
-<div id="login">
-
-  <div class="loginCard">
-
-    <div class="logo">
-      GEOMETRY
-    </div>
-
-    <div class="logoSub">
-      RUSH // GLOBAL
-    </div>
-
-    <button id="loginBtn" class="google">
-      Mit Google anmelden
-    </button>
-
-    <div id="loginError" class="loginError"></div>
-
-  </div>
-
-</div>
-
-
-<!-- GAME -->
-
-<div id="game" class="hidden">
+<div id="ui">
 
   <div class="top">
+    <div class="logo">GEOMETRY RUSH</div>
 
-    <div class="brand">
-      GEOMETRY // RUSH
-    </div>
-
-    <div class="account">
-
-      <div id="playerName" class="name">
-        Player
+    <div class="stats">
+      <div class="stat">
+        SCORE <span id="score" class="green">0</span>
       </div>
 
-      <img id="avatar" class="avatar" alt="">
-
-    </div>
-
-  </div>
-
-
-  <div class="hud">
-
-    <div class="stat">
-      <div class="statLabel">SCORE</div>
-      <div id="score" class="statValue">0</div>
-    </div>
-
-    <div class="stat">
-      <div class="statLabel">BEST</div>
-      <div id="best" class="statValue">0</div>
-    </div>
-
-    <div class="stat">
-      <div class="statLabel">COINS</div>
-      <div id="coins" class="statValue">0</div>
-    </div>
-
-  </div>
-
-
-  <canvas id="canvas"></canvas>
-
-
-  <div id="start" class="start">
-
-    <div class="startTitle">
-      <span>GEO</span>METRY
-    </div>
-
-    <div class="startHint">
-      KLICKEN • LEERTASTE • TAP
-    </div>
-
-  </div>
-
-
-  <div class="menu">
-
-    <button id="shopBtn">
-      ◈ SKINS
-    </button>
-
-    <button id="rankingBtn">
-      ★ RANGLISTE
-    </button>
-
-  </div>
-
-
-  <!-- GAME OVER -->
-
-  <div id="gameOver" class="hidden">
-
-    <div class="overCard">
-
-      <div class="overTitle">
-        RUN ENDE
+      <div class="stat">
+        BEST <span id="best" class="green">0</span>
       </div>
 
-      <div class="results">
+      <div class="stat">
+        🪙 <span id="coins" class="orange">0</span>
+      </div>
+    </div>
+  </div>
 
-        SCORE:
-        <strong id="finalScore">0</strong>
-        <br>
+  <div id="status">BEREIT</div>
 
-        BEST:
-        <strong id="finalBest">0</strong>
-        <br>
+  <div id="gameButtons" class="hidden">
+    <button id="menuButton">☰</button>
+    <button id="jumpButton">JUMP</button>
+  </div>
 
-        COINS:
-        <strong id="earnedCoins">0</strong>
+  <div id="menu" class="screen">
+    <div class="panel">
 
+      <h1>GEOMETRY<br><span class="green">RUSH</span></h1>
+
+      <div class="subtitle">
+        Jump. Dodge. Survive. Immer schneller.
       </div>
 
-      <button id="retry" class="mainBtn">
+      <button id="loginBtn" class="primary">
+        MIT GOOGLE ANMELDEN
+      </button>
+
+      <div class="loginInfo" id="loginText">
+        Für Highscore, Coins, Skins und globale Rangliste.
+      </div>
+
+      <div style="height:15px"></div>
+
+      <div class="row">
+        <button id="startBtn">▶ SPIELEN</button>
+        <button id="skinsBtn">◆ SKINS</button>
+        <button id="rankBtn">🏆 RANGLISTE</button>
+        <button id="logoutBtn" class="hidden">ABMELDEN</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="skinsScreen" class="screen hidden">
+    <div class="panel">
+
+      <h2>SKIN SHOP</h2>
+
+      <div class="subtitle">
+        Deine Coins bekommst du abhängig davon, wie weit du kommst.
+      </div>
+
+      <div id="skinCards" class="cards"></div>
+
+      <br>
+
+      <button id="closeSkins">ZURÜCK</button>
+
+    </div>
+  </div>
+
+  <div id="rankScreen" class="screen hidden">
+    <div class="panel">
+
+      <h2>🏆 GLOBALE RANGLISTE</h2>
+
+      <div class="small">
+        Die Werte werden aus Firebase geladen.
+      </div>
+
+      <div id="leaderboard">
+        Laden...
+      </div>
+
+      <br>
+
+      <button id="closeRank">ZURÜCK</button>
+
+    </div>
+  </div>
+
+  <div id="gameOver" class="screen hidden">
+    <div class="panel" style="text-align:center">
+
+      <div class="small">RUN BEENDET</div>
+
+      <h1 id="finalScore">0</h1>
+
+      <div class="subtitle">
+        Punkte
+      </div>
+
+      <div style="font-size:20px;margin:15px">
+        🪙 +<span id="earnedCoins" class="orange">0</span>
+      </div>
+
+      <button id="retryBtn" class="primary">
         NOCHMAL
       </button>
 
-      <button id="home" class="darkBtn">
-        ZURÜCK
+      <br><br>
+
+      <button id="gameMenuBtn">
+        MENÜ
       </button>
 
     </div>
-
   </div>
 
-
-  <!-- SHOP -->
-
-  <div id="shopModal" class="modal hidden">
-
-    <div class="modalCard">
-
-      <div class="modalHeader">
-
-        <div class="modalTitle">
-          SKIN SHOP
-        </div>
-
-        <button
-          class="close"
-          onclick="closeModal('shopModal')"
-        >
-          ×
-        </button>
-
-      </div>
-
-      <div id="shopGrid" class="shopGrid"></div>
-
-    </div>
-
-  </div>
-
-
-  <!-- RANKING -->
-
-  <div id="rankingModal" class="modal hidden">
-
-    <div class="modalCard">
-
-      <div class="modalHeader">
-
-        <div class="modalTitle">
-          GLOBAL RANGLISTE
-        </div>
-
-        <button
-          class="close"
-          onclick="closeModal('rankingModal')"
-        >
-          ×
-        </button>
-
-      </div>
-
-      <div id="rankingList">
-        Lade Rangliste...
-      </div>
-
-    </div>
-
-  </div>
+  <div id="error" class="hidden"></div>
 
 </div>
 
-
 <script type="module">
 
-/* =====================================================
+/* =========================================================
    FIREBASE
-===================================================== */
+========================================================= */
 
 import {
   initializeApp
@@ -722,763 +464,489 @@ const firebaseConfig = {
   appId: "1:229525498291:web:69556b9eb4d89489e283c6"
 };
 
-
-const firebaseApp =
-  initializeApp(firebaseConfig);
-
-const auth =
-  getAuth(firebaseApp);
-
-const db =
-  getFirestore(firebaseApp);
-
-const functions =
-  getFunctions(
-    firebaseApp,
-    "europe-west1"
-  );
-
-
-const ensurePlayer =
-  httpsCallable(
-    functions,
-    "ensurePlayer"
-  );
-
-const submitRun =
-  httpsCallable(
-    functions,
-    "submitRun"
-  );
-
-const buySkin =
-  httpsCallable(
-    functions,
-    "buySkin"
-  );
-
-const selectSkin =
-  httpsCallable(
-    functions,
-    "selectSkin"
-  );
-
-
-/* =====================================================
-   ELEMENTE
-===================================================== */
-
-const login =
-  document.getElementById("login");
-
-const game =
-  document.getElementById("game");
-
-const loginBtn =
-  document.getElementById("loginBtn");
-
-const loginError =
-  document.getElementById("loginError");
-
-const playerName =
-  document.getElementById("playerName");
-
-const avatar =
-  document.getElementById("avatar");
-
-const scoreEl =
-  document.getElementById("score");
-
-const bestEl =
-  document.getElementById("best");
-
-const coinsEl =
-  document.getElementById("coins");
-
-const start =
-  document.getElementById("start");
-
-const gameOver =
-  document.getElementById("gameOver");
-
-const finalScore =
-  document.getElementById("finalScore");
-
-const finalBest =
-  document.getElementById("finalBest");
-
-const earnedCoins =
-  document.getElementById("earnedCoins");
-
-const shopGrid =
-  document.getElementById("shopGrid");
-
-const rankingList =
-  document.getElementById("rankingList");
-
-
-/* =====================================================
-   PLAYER
-===================================================== */
-
-let currentUser = null;
-
-let player = {
-  name:"Player",
-  highscore:0,
-  coins:0,
-  skin:"green",
-  ownedSkins:["green"]
-};
-
-
-/* =====================================================
-   SKINS
-===================================================== */
-
-const skins = [
-
-  {
-    id:"green",
-    name:"NEON",
-    price:0,
-    color:"#45ff9a"
-  },
-
-  {
-    id:"cyan",
-    name:"CYBER",
-    price:50,
-    color:"#32e8ff"
-  },
-
-  {
-    id:"purple",
-    name:"VOID",
-    price:100,
-    color:"#a95cff"
-  },
-
-  {
-    id:"orange",
-    name:"FIRE",
-    price:200,
-    color:"#ff7b32"
-  },
-
-  {
-    id:"pink",
-    name:"LASER",
-    price:350,
-    color:"#ff42c8"
-  },
-
-  {
-    id:"white",
-    name:"GHOST",
-    price:600,
-    color:"#ffffff"
-  },
-
-  {
-    id:"gold",
-    name:"GOLD",
-    price:1000,
-    color:"#ffd84d"
-  },
-
-  {
-    id:"red",
-    name:"INFERNO",
-    price:2000,
-    color:"#ff3c4a"
-  }
-
-];
-
-
-/* =====================================================
-   LOGIN
-===================================================== */
-
-loginBtn.onclick =
-async () => {
-
-  loginError.textContent = "";
-
-  loginBtn.disabled = true;
-  loginBtn.textContent =
-    "ANMELDUNG...";
-
-  try{
-
-    const provider =
-      new GoogleAuthProvider();
-
-    provider.setCustomParameters({
-      prompt:"select_account"
-    });
-
-    await signInWithPopup(
-      auth,
-      provider
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    if(
-      error.code ===
-      "auth/popup-blocked"
-    ){
-
-      try{
-
-        const provider =
-          new GoogleAuthProvider();
-
-        await signInWithRedirect(
-          auth,
-          provider
-        );
-
-        return;
-
-      }catch(e){
-
-        showLoginError(e);
-
-      }
-
-    }else{
-
-      showLoginError(error);
-
-    }
-
-  }finally{
-
-    loginBtn.disabled = false;
-
-    loginBtn.textContent =
-      "Mit Google anmelden";
-
-  }
-
-};
-
-
-function showLoginError(error){
-
-  const code =
-    error?.code || "";
-
-  const messages = {
-
-    "auth/configuration-not-found":
-      "Firebase Authentication ist nicht eingerichtet.",
-
-    "auth/operation-not-allowed":
-      "Google-Anmeldung ist in Firebase nicht aktiviert.",
-
-    "auth/unauthorized-domain":
-      "Deine GitHub-Pages-Domain muss in Firebase unter Authorized domains eingetragen werden.",
-
-    "auth/invalid-api-key":
-      "Der Firebase API-Key ist ungültig.",
-
-    "auth/network-request-failed":
-      "Netzwerkfehler."
-
-  };
-
-  loginError.innerHTML =
-    `${messages[code] || "Anmeldung fehlgeschlagen."}
-    <br>
-    <small>${code}</small>`;
-
-}
-
-
-try{
-
-  await getRedirectResult(auth);
-
-}catch(error){
-
-  if(error){
-    console.error(error);
-  }
-
-}
-
-
-/* =====================================================
-   AUTH
-===================================================== */
-
-onAuthStateChanged(
-  auth,
-  async user => {
-
-    if(!user){
-
-      currentUser = null;
-
-      login.classList.remove(
-        "hidden"
-      );
-
-      game.classList.add(
-        "hidden"
-      );
-
-      return;
-
-    }
-
-    currentUser = user;
-
-    login.classList.add(
-      "hidden"
-    );
-
-    game.classList.remove(
-      "hidden"
-    );
-
-    playerName.textContent =
-      user.displayName ||
-      "Player";
-
-    if(user.photoURL){
-
-      avatar.src =
-        user.photoURL;
-
-    }
-
-    await loadPlayer();
-
-    startRanking();
-
-  }
+const firebaseApp = initializeApp(firebaseConfig);
+
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+
+const functions = getFunctions(
+  firebaseApp,
+  "europe-west1"
+);
+
+const ensurePlayer = httpsCallable(
+  functions,
+  "ensurePlayer"
+);
+
+const submitRun = httpsCallable(
+  functions,
+  "submitRun"
+);
+
+const buySkin = httpsCallable(
+  functions,
+  "buySkin"
+);
+
+const selectSkin = httpsCallable(
+  functions,
+  "selectSkin"
 );
 
 
-/* =====================================================
-   PLAYER LADEN
-===================================================== */
+/* =========================================================
+   DOM
+========================================================= */
 
-async function loadPlayer(){
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-  try{
+const menu = document.getElementById("menu");
+const skinsScreen = document.getElementById("skinsScreen");
+const rankScreen = document.getElementById("rankScreen");
+const gameOver = document.getElementById("gameOver");
 
-    await ensurePlayer();
+const scoreEl = document.getElementById("score");
+const bestEl = document.getElementById("best");
+const coinsEl = document.getElementById("coins");
+const statusEl = document.getElementById("status");
 
-  }catch(error){
+const gameButtons = document.getElementById("gameButtons");
+const errorEl = document.getElementById("error");
 
-    console.error(
-      "ensurePlayer:",
-      error
-    );
-
-  }
-
-
-  try{
-
-    const ref =
-      doc(
-        db,
-        "players",
-        currentUser.uid
-      );
-
-    const snap =
-      await getDoc(ref);
-
-    if(snap.exists()){
-
-      const data =
-        snap.data();
-
-      player = {
-
-        name:
-          data.name ||
-          currentUser.displayName ||
-          "Player",
-
-        highscore:
-          Number(
-            data.highscore || 0
-          ),
-
-        coins:
-          Number(
-            data.coins || 0
-          ),
-
-        skin:
-          data.skin ||
-          "green",
-
-        ownedSkins:
-          Array.isArray(
-            data.ownedSkins
-          )
-          ?
-          data.ownedSkins
-          :
-          ["green"]
-
-      };
-
-    }
-
-  }catch(error){
-
-    console.error(
-      "Player:",
-      error
-    );
-
-  }
-
-  updateHUD();
-  renderShop();
-
-}
+let user = null;
+let playerData = null;
 
 
-function updateHUD(){
+/* =========================================================
+   GAME VARIABLES
+========================================================= */
 
-  bestEl.textContent =
-    player.highscore.toLocaleString(
-      "de-DE"
-    );
-
-  coinsEl.textContent =
-    player.coins.toLocaleString(
-      "de-DE"
-    );
-
-}
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-document
-  .getElementById("home")
-  .onclick = () => {
-
-    gameOver.classList.add(
-      "hidden"
-    );
-
-    start.classList.remove(
-      "hidden"
-    );
-
-  };
-
-
-/* =====================================================
-   CANVAS
-===================================================== */
-
-const canvas =
-  document.getElementById("canvas");
-
-const ctx =
-  canvas.getContext("2d");
-
-let W = 0;
-let H = 0;
-let DPR = 1;
-
-function resize(){
-
-  DPR =
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
-    );
-
-  W =
-    window.innerWidth;
-
-  H =
-    window.innerHeight;
-
-  canvas.width =
-    W*DPR;
-
-  canvas.height =
-    H*DPR;
-
-  canvas.style.width =
-    W+"px";
-
-  canvas.style.height =
-    H+"px";
-
-  ctx.setTransform(
-    DPR,
-    0,
-    0,
-    DPR,
-    0,
-    0
-  );
-
-}
-
-window.addEventListener(
-  "resize",
-  resize
-);
-
-resize();
-
-
-/* =====================================================
-   GAME
-===================================================== */
+let W = innerWidth;
+let H = innerHeight;
 
 let running = false;
 
-let score = 0;
-
-let distance = 0;
-
-let speed = 7;
-
-let difficulty = 1;
-
-let playerX = 0;
-
+let playerX = 170;
 let playerY = 0;
 
-let playerSize = 34;
+let playerSize = 38;
 
 let velocityY = 0;
 
 let grounded = false;
-
-let canJump = true;
-
-let rotation = 0;
-
-let platforms = [];
-
-let spikes = [];
-
-let particles = [];
-
-let lastTime = 0;
-
-let spawnX = 0;
+let canJump = false;
 
 let cameraX = 0;
 
+let distance = 0;
+let score = 0;
 
-/* =====================================================
-   LEVEL GENERATION
-===================================================== */
+let gameSpeed = 7;
 
-function resetLevel(){
+let difficulty = 0;
 
-  platforms = [];
-  spikes = [];
+let lastTime = 0;
 
-  const ground =
-    H * .78;
+let platforms = [];
+let hazards = [];
+let jumpPads = [];
 
-  /*
-    Startplattform
-  */
+let particles = [];
 
-  platforms.push({
+let worldEnd = 0;
 
-    x:0,
-    y:ground,
-    w:900,
-    h:40,
-    safe:true
+const gravity = 0.72;
 
-  });
+const groundY = () =>
+  H - Math.max(100, H * .18);
 
-  spawnX = 900;
 
+/* =========================================================
+   SKINS
+========================================================= */
+
+const SKINS = {
+
+  green:{
+    name:"Neon",
+    price:0,
+    color:"#45ff9a"
+  },
+
+  cyan:{
+    name:"Cyber",
+    price:50,
+    color:"#00eaff"
+  },
+
+  purple:{
+    name:"Void",
+    price:100,
+    color:"#a855f7"
+  },
+
+  orange:{
+    name:"Blaze",
+    price:200,
+    color:"#ff7a00"
+  },
+
+  pink:{
+    name:"Pulse",
+    price:350,
+    color:"#ff4fd8"
+  },
+
+  white:{
+    name:"Ghost",
+    price:600,
+    color:"#ffffff"
+  },
+
+  gold:{
+    name:"Gold",
+    price:1000,
+    color:"#ffd43b"
+  },
+
+  red:{
+    name:"Inferno",
+    price:2000,
+    color:"#ff3030"
+  }
+
+};
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function rand(min,max){
+  return Math.random()*(max-min)+min;
+}
+
+function clamp(v,min,max){
+  return Math.max(min,Math.min(max,v));
+}
+
+function showError(text){
+
+  errorEl.textContent = text;
+  errorEl.classList.remove("hidden");
+
+  clearTimeout(showError.timer);
+
+  showError.timer = setTimeout(()=>{
+    errorEl.classList.add("hidden");
+  },5000);
+}
+
+function roundRect(x,y,w,h,r){
+
+  r = Math.min(r,w/2,h/2);
+
+  ctx.beginPath();
+
+  ctx.moveTo(x+r,y);
+
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+
+  ctx.arcTo(x,y+h,x,y,r);
+
+  ctx.arcTo(x,y,x+w,y,r);
+
+  ctx.closePath();
 }
 
 
+/* =========================================================
+   CANVAS
+========================================================= */
+
+function resize(){
+
+  W = innerWidth;
+  H = innerHeight;
+
+  const dpr = Math.min(devicePixelRatio || 1,2);
+
+  canvas.width = W*dpr;
+  canvas.height = H*dpr;
+
+  canvas.style.width = W+"px";
+  canvas.style.height = H+"px";
+
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+addEventListener("resize",resize);
+
+resize();
+
+
+/* =========================================================
+   LEVEL GENERATION
+   IMMER ERREICHBARE PLATTFORMEN
+========================================================= */
+
 function generateLevel(){
 
-  while(
-    spawnX <
-    cameraX + W + 900
-  ){
+  platforms = [];
+  hazards = [];
+  jumpPads = [];
 
-    const gap =
-      60 +
-      Math.random()*90;
+  const gy = groundY();
+
+  let x = -800;
+
+  let currentY = gy;
+
+  /*
+    Große Startplattform.
+  */
+
+  platforms.push({
+    x:-1000,
+    y:gy,
+    w:1500,
+    h:50
+  });
+
+  x = 500;
+
+  while(x < 150000){
+
+    const progress = x / 150000;
+
+    difficulty = clamp(progress,0,1);
+
+    /*
+      Plattformen werden mit der Zeit etwas kleiner.
+    */
+
+    const minWidth =
+      300 - difficulty*70;
+
+    const maxWidth =
+      570 - difficulty*80;
 
     const width =
-      150 +
-      Math.random()*180;
+      rand(minWidth,maxWidth);
 
-    const y =
-      H*.55 +
-      Math.random()*H*.18;
 
-    const platform = {
+    /*
+      WICHTIG:
 
-      x:
-        spawnX + gap,
+      Höhenänderung wird begrenzt.
+      Dadurch entstehen keine unfairen
+      riesigen Sprünge.
+    */
 
-      y:y,
+    const maxVertical =
+      70 + difficulty*25;
 
-      w:width,
+    let newY =
+      currentY +
+      rand(-maxVertical,maxVertical);
 
-      h:30,
-
-      safe:true
-
-    };
-
-    platforms.push(
-      platform
+    newY = clamp(
+      newY,
+      gy-260,
+      gy-15
     );
 
 
     /*
-      Rote Plattform =
-      darf NICHT betreten werden.
+      Sprungweite:
+
+      Auch bei hoher Schwierigkeit bleibt
+      die Lücke innerhalb einer erreichbaren
+      Distanz.
     */
 
-    if(
-      Math.random() <
-      Math.min(
-        .25 + difficulty*.035,
-        .7
-      )
-    ){
+    const maxGap =
+      130 + difficulty*30;
 
-      const redX =
+    const minGap = 35;
+
+    const gap =
+      rand(minGap,maxGap);
+
+    x += gap;
+
+
+    const platform = {
+      x:x,
+      y:newY,
+      w:width,
+      h:50
+    };
+
+    platforms.push(platform);
+
+
+    /*
+      SPIKES
+
+      Nicht jede Plattform bekommt Spikes.
+      Außerdem bleibt immer Platz zum Landen.
+    */
+
+    const spikeChance =
+      .22 + difficulty*.30;
+
+    if(Math.random() < spikeChance){
+
+      const count =
+        Math.random() <
+        .22 + difficulty*.3
+        ? 2
+        : 1;
+
+      const spikeWidth = 34;
+
+      const startX =
         platform.x +
-        20 +
-        Math.random()*
-        Math.max(
-          10,
-          platform.w-60
+        rand(
+          80,
+          Math.max(
+            90,
+            platform.w -
+            count*spikeWidth -
+            80
+          )
         );
 
-      spikes.push({
+      for(let i=0;i<count;i++){
 
-        x:redX,
+        hazards.push({
+          x:startX+i*spikeWidth,
+          y:platform.y-31,
+          w:30,
+          h:31
+        });
 
-        y:
-          platform.y-28,
-
-        w:28,
-
-        h:28
-
-      });
-
+      }
     }
 
 
     /*
-      Boden-Spikes zwischen Plattformen
+      ORANGE JUMP PAD
+
+      Ab und zu wird ein Pad erzeugt.
     */
 
-    if(
-      Math.random() <
-      Math.min(
-        .35 + difficulty*.02,
-        .75
-      )
-    ){
+    const padChance =
+      .15 + difficulty*.25;
 
-      spikes.push({
+    if(Math.random() < padChance){
 
-        x:
-          spawnX +
-          gap/2,
+      let padX =
+        platform.x +
+        rand(
+          80,
+          Math.max(
+            90,
+            platform.w-100
+          )
+        );
 
-        y:
-          H*.78-32,
+      const pad = {
+        x:padX,
+        y:platform.y-17,
+        w:36,
+        h:17,
+        power:-18.5
+      };
 
-        w:
-          32,
+      /*
+        Kein Pad direkt in einem Spike.
+      */
 
-        h:
-          32
+      const conflict = hazards.some(h =>
+        pad.x < h.x+h.w &&
+        pad.x+pad.w > h.x
+      );
 
-      });
+      if(!conflict){
 
+        jumpPads.push(pad);
+      }
     }
 
 
-    spawnX =
-      platform.x +
-      platform.w;
+    currentY = newY;
 
+    x += width;
   }
 
+  worldEnd = x;
 }
 
 
-/* =====================================================
-   PARTICLES
-===================================================== */
+/* =========================================================
+   RESET
+========================================================= */
 
-function particleBurst(
-  x,
-  y,
-  amount=15
-){
+function resetLevel(){
 
-  for(
-    let i=0;
-    i<amount;
-    i++
-  ){
+  generateLevel();
 
-    particles.push({
+  playerX = 170;
 
-      x:x,
+  playerY =
+    groundY() -
+    playerSize;
 
-      y:y,
+  velocityY = 0;
 
-      vx:
-        (Math.random()-.5)*7,
+  grounded = true;
+  canJump = true;
 
-      vy:
-        (Math.random()-.5)*7,
+  cameraX = 0;
 
-      life:1,
+  distance = 0;
+  score = 0;
 
-      size:
-        2+Math.random()*5
+  gameSpeed = 7;
 
-    });
+  particles = [];
 
-  }
-
+  updateHUD();
 }
 
 
-/* =====================================================
+/* =========================================================
+   START
+========================================================= */
+
+function startGame(){
+
+  menu.classList.add("hidden");
+  skinsScreen.classList.add("hidden");
+  rankScreen.classList.add("hidden");
+  gameOver.classList.add("hidden");
+
+  gameButtons.classList.remove("hidden");
+
+  resetLevel();
+
+  running = true;
+
+  statusEl.textContent = "LAUFEN";
+
+  lastTime = performance.now();
+}
+
+
+/* =========================================================
    JUMP
-===================================================== */
+========================================================= */
 
 function jump(){
 
@@ -1487,280 +955,199 @@ function jump(){
     startGame();
 
     return;
-
   }
 
   /*
-    NUR EIN SPRUNG.
-
-    canJump wird erst wieder true,
-    wenn der Spieler wirklich
-    auf einer Plattform landet.
+    Kein Doppelsprung.
   */
 
-  if(
-    grounded &&
-    canJump
-  ){
+  if(grounded && canJump){
 
-    velocityY =
-      -13.5;
+    velocityY = -13.5;
 
-    grounded =
-      false;
+    grounded = false;
 
-    canJump =
-      false;
+    canJump = false;
 
-    particleBurst(
-      playerX-cameraX+17,
-      playerY+34,
-      10
+    spawnJumpParticles(
+      playerX+playerSize/2,
+      playerY+playerSize
     );
-
   }
-
 }
 
 
-window.addEventListener(
-  "keydown",
-  event => {
+/* =========================================================
+   JUMP PAD
+========================================================= */
 
-    if(
-      event.code === "Space" ||
-      event.code === "ArrowUp"
-    ){
+function activateJumpPad(pad){
 
-      event.preventDefault();
+  /*
+    Starkes Katapult.
+  */
 
-      jump();
+  velocityY = pad.power;
 
-    }
+  grounded = false;
 
+  canJump = false;
+
+  /*
+    Orange Partikel.
+  */
+
+  for(let i=0;i<20;i++){
+
+    particles.push({
+
+      x:playerX+playerSize/2,
+
+      y:pad.y,
+
+      vx:rand(-4,4),
+
+      vy:rand(-7,-2),
+
+      life:1,
+
+      size:rand(2,6),
+
+      color:"#ff8a00"
+
+    });
   }
-);
-
-
-window.addEventListener(
-  "pointerdown",
-  event => {
-
-    if(
-      event.target.closest(
-        "button"
-      ) ||
-      event.target.closest(
-        ".modal"
-      )
-    ){
-
-      return;
-
-    }
-
-    jump();
-
-  }
-);
-
-
-/* =====================================================
-   START GAME
-===================================================== */
-
-function startGame(){
-
-  running = true;
-
-  score = 0;
-
-  distance = 0;
-
-  speed = 7;
-
-  difficulty = 1;
-
-  velocityY = 0;
-
-  rotation = 0;
-
-  cameraX = 0;
-
-  playerX = 180;
-
-  playerY =
-    H*.78-playerSize;
-
-  grounded = true;
-
-  canJump = true;
-
-  lastTime =
-    performance.now();
-
-  resetLevel();
-
-  start.classList.add(
-    "hidden"
-  );
-
-  gameOver.classList.add(
-    "hidden"
-  );
-
-  scoreEl.textContent =
-    "0";
-
-  requestAnimationFrame(
-    loop
-  );
-
 }
 
 
-/* =====================================================
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+function spawnJumpParticles(x,y){
+
+  for(let i=0;i<10;i++){
+
+    particles.push({
+
+      x:x,
+
+      y:y,
+
+      vx:rand(-3,3),
+
+      vy:rand(-5,-1),
+
+      life:1,
+
+      size:rand(2,5),
+
+      color:
+        SKINS[playerData?.skin || "green"]?.color
+        || "#45ff9a"
+
+    });
+  }
+}
+
+function updateParticles(dt){
+
+  for(const p of particles){
+
+    p.x += p.vx*dt*60;
+
+    p.y += p.vy*dt*60;
+
+    p.vy += .25*dt*60;
+
+    p.life -= .025*dt*60;
+  }
+
+  particles =
+    particles.filter(p=>p.life>0);
+}
+
+
+/* =========================================================
    COLLISION
-===================================================== */
+========================================================= */
 
-function rectsOverlap(
-  a,
-  b
-){
+function rectsOverlap(a,b){
 
   return (
-
-    a.x <
-      b.x+b.w &&
-
-    a.x+a.w >
-      b.x &&
-
-    a.y <
-      b.y+b.h &&
-
-    a.y+a.h >
-      b.y
-
+    a.x < b.x+b.w &&
+    a.x+a.w > b.x &&
+    a.y < b.y+b.h &&
+    a.y+a.h > b.y
   );
-
 }
 
 
-/* =====================================================
+/* =========================================================
    UPDATE
-===================================================== */
+========================================================= */
 
 function update(dt){
 
+  if(!running) return;
+
+
   /*
-    Geschwindigkeit steigt immer weiter.
+    Geschwindigkeit steigt langsam.
   */
 
-  distance +=
-    speed*dt;
+  gameSpeed =
+    Math.min(
+      19,
+      7 + score/120
+    );
+
+
+  /*
+    Welt bewegt sich nach links.
+  */
+
+  playerX += gameSpeed*dt*60;
+
+  distance =
+    Math.max(
+      0,
+      playerX-170
+    );
 
   score =
-    Math.floor(
-      distance/10
-    );
-
-  difficulty =
-    1 +
-    score/600;
-
-  speed =
-    Math.min(
-      7 +
-      difficulty*1.5,
-      19
-    );
-
-  scoreEl.textContent =
-    score.toLocaleString(
-      "de-DE"
-    );
+    Math.floor(distance/10);
 
 
   /*
-    Kamera folgt dem Spieler.
+    Physik
   */
 
-  playerX +=
-    speed*dt;
+  const previousBottom =
+    playerY+playerSize;
 
-  cameraX =
-    playerX -
-    W*.2;
+  velocityY += gravity*dt*60;
 
-
-  generateLevel();
-
-
-  /*
-    Schwerkraft
-  */
-
-  velocityY +=
-    .72*dt;
-
-  const oldY =
-    playerY;
-
-  playerY +=
-    velocityY*dt;
+  playerY += velocityY*dt*60;
 
   grounded = false;
 
 
-  const playerWorld = {
-
-    x:
-      playerX,
-
-    y:
-      playerY,
-
-    w:
-      playerSize,
-
-    h:
-      playerSize
-
-  };
-
-
   /*
-    Plattform-Landung
-
-    Wichtig:
-    Nur von oben.
+    Plattform-Landung.
   */
 
-  for(
-    const p of platforms
-  ){
-
-    const previousBottom =
-      oldY+playerSize;
+  for(const p of platforms){
 
     const currentBottom =
       playerY+playerSize;
 
     if(
-
-      playerX+playerSize >
-        p.x &&
-
-      playerX <
-        p.x+p.w &&
-
-      previousBottom <= p.y+5 &&
-
+      playerX+playerSize > p.x &&
+      playerX < p.x+p.w &&
+      previousBottom <= p.y+8 &&
       currentBottom >= p.y &&
-
       velocityY >= 0
-
     ){
 
       playerY =
@@ -1773,128 +1160,627 @@ function update(dt){
       canJump = true;
 
       break;
-
     }
-
   }
 
 
   /*
-    Wenn wir runterfallen:
-    Game Over.
+    Jump-Pad-Kollision.
+
+    Nur wenn der Spieler von oben
+    auf das Pad kommt.
   */
 
-  if(
-    playerY >
-    H+100
-  ){
-
-    endGame();
-
-    return;
-
-  }
-
-
-  /*
-    Rote Gefahren
-  */
-
-  for(
-    const spike of spikes
-  ){
-
-    const s = {
-
-      x:spike.x,
-
-      y:spike.y,
-
-      w:spike.w,
-
-      h:spike.h
-
-    };
+  for(const pad of jumpPads){
 
     if(
-      rectsOverlap(
-        playerWorld,
-        s
-      )
+      playerX+playerSize > pad.x &&
+      playerX < pad.x+pad.w &&
+      playerY+playerSize >= pad.y &&
+      playerY+playerSize <= pad.y+pad.h+12 &&
+      velocityY >= 0
     ){
+
+      playerY =
+        pad.y-playerSize;
+
+      activateJumpPad(pad);
+
+      break;
+    }
+  }
+
+
+  /*
+    Spikes.
+  */
+
+  const playerRect = {
+    x:playerX+6,
+    y:playerY+6,
+    w:playerSize-12,
+    h:playerSize-8
+  };
+
+  for(const h of hazards){
+
+    const spikeRect = {
+      x:h.x+5,
+      y:h.y+5,
+      w:h.w-10,
+      h:h.h-5
+    };
+
+    if(rectsOverlap(playerRect,spikeRect)){
 
       endGame();
 
       return;
-
     }
-
   }
 
 
   /*
-    Alte Plattformen entfernen.
+    Runtergefallen.
   */
 
-  platforms =
-    platforms.filter(
-      p =>
-        p.x+p.w >
-        cameraX-500
-    );
+  if(playerY > H+200){
 
-  spikes =
-    spikes.filter(
-      s =>
-        s.x+s.w >
-        cameraX-500
-    );
+    endGame();
+
+    return;
+  }
 
 
   /*
-    Partikel
+    Partikel.
   */
 
-  for(
-    let i=particles.length-1;
-    i>=0;
-    i--
-  ){
+  updateParticles(dt);
 
-    const p =
-      particles[i];
-
-    p.x +=
-      p.vx*dt;
-
-    p.y +=
-      p.vy*dt;
-
-    p.vy +=
-      .2*dt;
-
-    p.life -=
-      .045*dt;
-
-    if(
-      p.life <= 0
-    ){
-
-      particles.splice(
-        i,
-        1
-      );
-
-    }
-
-  }
-
+  updateHUD();
 }
 
 
-/* =====================================================
+/* =========================================================
+   END GAME
+========================================================= */
+
+async function endGame(){
+
+  if(!running) return;
+
+  running = false;
+
+  gameButtons.classList.add("hidden");
+
+  statusEl.textContent = "GAME OVER";
+
+  const final =
+    Math.floor(score);
+
+  const earned =
+    Math.floor(final/100);
+
+  document.getElementById(
+    "finalScore"
+  ).textContent = final;
+
+  document.getElementById(
+    "earnedCoins"
+  ).textContent = earned;
+
+  gameOver.classList.remove("hidden");
+
+
+  /*
+    Score wird serverseitig gespeichert.
+  */
+
+  if(user){
+
+    try{
+
+      const result =
+        await submitRun({
+          score:final
+        });
+
+      if(result.data){
+
+        bestEl.textContent =
+          result.data.highscore ?? final;
+
+        coinsEl.textContent =
+          result.data.coins ?? 0;
+
+        await loadPlayer();
+      }
+
+    }catch(err){
+
+      console.error(err);
+
+      showError(
+        "Score konnte nicht gespeichert werden."
+      );
+    }
+  }
+}
+
+
+/* =========================================================
+   DRAW BACKGROUND
+========================================================= */
+
+function drawBackground(){
+
+  const g =
+    ctx.createLinearGradient(
+      0,0,0,H
+    );
+
+  g.addColorStop(0,"#020304");
+
+  g.addColorStop(
+    .55,
+    "#07100c"
+  );
+
+  g.addColorStop(
+    1,
+    "#020403"
+  );
+
+  ctx.fillStyle = g;
+
+  ctx.fillRect(0,0,W,H);
+
+
+  /*
+    Grid
+  */
+
+  ctx.save();
+
+  ctx.globalAlpha=.12;
+
+  ctx.strokeStyle="#45ff9a";
+
+  ctx.lineWidth=1;
+
+  const grid=50;
+
+  const offset =
+    -(cameraX%grid);
+
+  for(
+    let x=offset;
+    x<W;
+    x+=grid
+  ){
+
+    ctx.beginPath();
+
+    ctx.moveTo(x,0);
+
+    ctx.lineTo(x,H);
+
+    ctx.stroke();
+  }
+
+  for(
+    let y=0;
+    y<H;
+    y+=grid
+  ){
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,y);
+
+    ctx.lineTo(W,y);
+
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+
+  /*
+    Horizontale Neonlinie.
+  */
+
+  ctx.save();
+
+  ctx.globalAlpha=.35;
+
+  ctx.strokeStyle="#45ff9a";
+
+  ctx.shadowBlur=15;
+
+  ctx.shadowColor="#45ff9a";
+
+  ctx.beginPath();
+
+  ctx.moveTo(0,groundY()+25);
+
+  ctx.lineTo(W,groundY()+25);
+
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+
+/* =========================================================
+   DRAW PLATFORMS
+========================================================= */
+
+function drawPlatforms(){
+
+  for(const p of platforms){
+
+    const sx =
+      p.x-cameraX;
+
+    if(
+      sx+p.w<0 ||
+      sx>W
+    ) continue;
+
+
+    ctx.save();
+
+    ctx.shadowBlur=20;
+
+    ctx.shadowColor="#45ff9a";
+
+    ctx.fillStyle="#10251b";
+
+    ctx.fillRect(
+      sx,
+      p.y,
+      p.w,
+      p.h
+    );
+
+    ctx.shadowBlur=0;
+
+    ctx.fillStyle="#45ff9a";
+
+    ctx.fillRect(
+      sx,
+      p.y,
+      p.w,
+      4
+    );
+
+    ctx.globalAlpha=.2;
+
+    ctx.fillStyle="#45ff9a";
+
+    ctx.fillRect(
+      sx,
+      p.y+4,
+      p.w,
+      20
+    );
+
+    ctx.restore();
+  }
+}
+
+
+/* =========================================================
+   DRAW SPIKES
+========================================================= */
+
+function drawHazards(){
+
+  for(const h of hazards){
+
+    const sx =
+      h.x-cameraX;
+
+    if(
+      sx+h.w<0 ||
+      sx>W
+    ) continue;
+
+
+    ctx.save();
+
+    ctx.shadowBlur=22;
+
+    ctx.shadowColor="#ff3030";
+
+    ctx.fillStyle="#ff3030";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      sx,
+      h.y+h.h
+    );
+
+    ctx.lineTo(
+      sx+h.w/2,
+      h.y
+    );
+
+    ctx.lineTo(
+      sx+h.w,
+      h.y+h.h
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.restore();
+  }
+}
+
+
+/* =========================================================
+   DRAW JUMP PADS
+========================================================= */
+
+function drawJumpPads(){
+
+  const pulse =
+    Math.sin(performance.now()*.01)*2;
+
+  for(const pad of jumpPads){
+
+    const sx =
+      pad.x-cameraX;
+
+    if(
+      sx+pad.w<0 ||
+      sx>W
+    ) continue;
+
+
+    ctx.save();
+
+    ctx.shadowBlur=25;
+
+    ctx.shadowColor="#ff8a00";
+
+    ctx.fillStyle="#ff7600";
+
+    roundRect(
+      sx,
+      pad.y+pulse,
+      pad.w,
+      pad.h,
+      5
+    );
+
+    ctx.fill();
+
+
+    /*
+      Heller Kern.
+    */
+
+    ctx.shadowBlur=0;
+
+    ctx.fillStyle="#ffd166";
+
+    roundRect(
+      sx+5,
+      pad.y+3+pulse,
+      pad.w-10,
+      5,
+      3
+    );
+
+    ctx.fill();
+
+
+    /*
+      Pfeil.
+    */
+
+    ctx.strokeStyle="#fff";
+
+    ctx.lineWidth=3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      sx+pad.w/2,
+      pad.y+13+pulse
+    );
+
+    ctx.lineTo(
+      sx+pad.w/2,
+      pad.y+5+pulse
+    );
+
+    ctx.moveTo(
+      sx+8,
+      pad.y+9+pulse
+    );
+
+    ctx.lineTo(
+      sx+pad.w/2,
+      pad.y+4+pulse
+    );
+
+    ctx.lineTo(
+      sx+pad.w-8,
+      pad.y+9+pulse
+    );
+
+    ctx.stroke();
+
+    ctx.restore();
+  }
+}
+
+
+/* =========================================================
+   DRAW PLAYER
+========================================================= */
+
+function drawPlayer(){
+
+  const x =
+    playerX-cameraX;
+
+  const y =
+    playerY;
+
+  const skin =
+    SKINS[playerData?.skin || "green"]
+    || SKINS.green;
+
+
+  ctx.save();
+
+  ctx.translate(
+    x+playerSize/2,
+    y+playerSize/2
+  );
+
+
+  /*
+    Rotation während des Sprungs.
+  */
+
+  if(!grounded){
+
+    ctx.rotate(
+      performance.now()*.006
+    );
+  }
+
+
+  ctx.shadowBlur=30;
+
+  ctx.shadowColor=skin.color;
+
+  ctx.fillStyle=skin.color;
+
+  roundRect(
+    -playerSize/2,
+    -playerSize/2,
+    playerSize,
+    playerSize,
+    8
+  );
+
+  ctx.fill();
+
+
+  /*
+    Inneres Muster.
+  */
+
+  ctx.shadowBlur=0;
+
+  ctx.fillStyle="#030505";
+
+  roundRect(
+    -9,
+    -9,
+    18,
+    18,
+    4
+  );
+
+  ctx.fill();
+
+
+  /*
+    Augen.
+  */
+
+  ctx.fillStyle=skin.color;
+
+  ctx.fillRect(
+    -6,
+    -4,
+    4,
+    4
+  );
+
+  ctx.fillRect(
+    2,
+    -4,
+    4,
+    4
+  );
+
+  ctx.restore();
+}
+
+
+/* =========================================================
+   DRAW PARTICLES
+========================================================= */
+
+function drawParticles(){
+
+  for(const p of particles){
+
+    ctx.save();
+
+    ctx.globalAlpha =
+      Math.max(0,p.life);
+
+    ctx.fillStyle =
+      p.color;
+
+    ctx.shadowBlur=12;
+
+    ctx.shadowColor =
+      p.color;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      p.x-cameraX,
+      p.y,
+      p.size,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.restore();
+  }
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+function updateCamera(){
+
+  const target =
+    playerX-W*.25;
+
+  cameraX +=
+    (target-cameraX)*.1;
+
+  cameraX =
+    Math.max(
+      0,
+      cameraX
+    );
+}
+
+
+/* =========================================================
    DRAW
-===================================================== */
+========================================================= */
 
 function draw(){
 
@@ -1905,861 +1791,517 @@ function draw(){
     H
   );
 
+  drawBackground();
 
-  /*
-    Hintergrund
-  */
+  updateCamera();
 
-  const bg =
-    ctx.createLinearGradient(
-      0,
-      0,
-      0,
-      H
-    );
+  drawPlatforms();
 
-  bg.addColorStop(
-    0,
-    "#030507"
-  );
+  drawJumpPads();
 
-  bg.addColorStop(
-    .55,
-    "#07110d"
-  );
+  drawHazards();
 
-  bg.addColorStop(
-    1,
-    "#020303"
-  );
+  drawParticles();
 
-  ctx.fillStyle =
-    bg;
-
-  ctx.fillRect(
-    0,
-    0,
-    W,
-    H
-  );
-
-
-  /*
-    Neon-Kreis im Hintergrund
-  */
-
-  const glow =
-    ctx.createRadialGradient(
-      W*.5,
-      H*.45,
-      10,
-      W*.5,
-      H*.45,
-      H*.55
-    );
-
-  glow.addColorStop(
-    0,
-    "rgba(69,255,154,.10)"
-  );
-
-  glow.addColorStop(
-    1,
-    "rgba(69,255,154,0)"
-  );
-
-  ctx.fillStyle =
-    glow;
-
-  ctx.fillRect(
-    0,
-    0,
-    W,
-    H
-  );
-
-
-  /*
-    Grid
-  */
-
-  ctx.strokeStyle =
-    "rgba(69,255,154,.055)";
-
-  ctx.lineWidth = 1;
-
-  const grid = 60;
-
-  const offset =
-    -(cameraX*.35)%grid;
-
-  for(
-    let x=offset;
-    x<W;
-    x+=grid
-  ){
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x,
-      H*.2
-    );
-
-    ctx.lineTo(
-      x,
-      H*.78
-    );
-
-    ctx.stroke();
-
-  }
-
-  for(
-    let y=H*.2;
-    y<H*.78;
-    y+=grid
-  ){
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      0,
-      y
-    );
-
-    ctx.lineTo(
-      W,
-      y
-    );
-
-    ctx.stroke();
-
-  }
-
-
-  /*
-    Boden
-  */
-
-  ctx.fillStyle =
-    "#07110c";
-
-  ctx.fillRect(
-    0,
-    H*.78,
-    W,
-    H*.22
-  );
-
-
-  /*
-    Plattformen
-  */
-
-  for(
-    const p of platforms
-  ){
-
-    const x =
-      p.x-cameraX;
-
-    if(
-      x > W+100 ||
-      x+p.w < -100
-    ) continue;
-
-
-    ctx.save();
-
-    ctx.shadowColor =
-      "#45ff9a";
-
-    ctx.shadowBlur =
-      18;
-
-    ctx.fillStyle =
-      "#45ff9a";
-
-    ctx.fillRect(
-      x,
-      p.y,
-      p.w,
-      p.h
-    );
-
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle =
-      "#07100b";
-
-    ctx.fillRect(
-      x+5,
-      p.y+7,
-      p.w-10,
-      p.h-7
-    );
-
-    /*
-      kleine Leuchtlinien
-    */
-
-    ctx.fillStyle =
-      "rgba(255,255,255,.35)";
-
-    ctx.fillRect(
-      x+8,
-      p.y+3,
-      p.w-16,
-      2
-    );
-
-    ctx.restore();
-
-  }
-
-
-  /*
-    ROTE GEFAHREN
-  */
-
-  for(
-    const s of spikes
-  ){
-
-    const x =
-      s.x-cameraX;
-
-    if(
-      x > W+100 ||
-      x+s.w < -100
-    ) continue;
-
-
-    ctx.save();
-
-    ctx.shadowColor =
-      "#ff304f";
-
-    ctx.shadowBlur =
-      20;
-
-    ctx.fillStyle =
-      "#ff304f";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x,
-      s.y+s.h
-    );
-
-    ctx.lineTo(
-      x+s.w/2,
-      s.y
-    );
-
-    ctx.lineTo(
-      x+s.w,
-      s.y+s.h
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-    ctx.fillStyle =
-      "#24070b";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x+7,
-      s.y+s.h-5
-    );
-
-    ctx.lineTo(
-      x+s.w/2,
-      s.y+8
-    );
-
-    ctx.lineTo(
-      x+s.w-7,
-      s.y+s.h-5
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-    ctx.restore();
-
-  }
-
-
-  /*
-    Spieler
-  */
-
-  const skin =
-    skins.find(
-      s =>
-        s.id === player.skin
-    ) || skins[0];
-
-  const px =
-    playerX-cameraX;
-
-  const py =
-    playerY;
-
-
-  ctx.save();
-
-  ctx.translate(
-    px+playerSize/2,
-    py+playerSize/2
-  );
-
-  /*
-    Cube dreht sich beim Springen.
-  */
-
-  if(!grounded){
-
-    rotation +=
-      .14;
-
-  }else{
-
-    rotation =
-      Math.round(
-        rotation/
-        (Math.PI/2)
-      )*
-      (Math.PI/2);
-
-  }
-
-  ctx.rotate(
-    rotation
-  );
-
-  ctx.shadowColor =
-    skin.color;
-
-  ctx.shadowBlur =
-    28;
-
-  ctx.fillStyle =
-    skin.color;
-
-  ctx.fillRect(
-    -17,
-    -17,
-    34,
-    34
-  );
-
-  ctx.shadowBlur = 0;
-
-  ctx.fillStyle =
-    "#050706";
-
-  ctx.fillRect(
-    -9,
-    -9,
-    18,
-    18
-  );
-
-  ctx.fillStyle =
-    "rgba(255,255,255,.8)";
-
-  ctx.fillRect(
-    -5,
-    -7,
-    4,
-    4
-  );
-
-  ctx.fillRect(
-    4,
-    -7,
-    4,
-    4
-  );
-
-  ctx.restore();
-
-
-  /*
-    Partikel
-  */
-
-  for(
-    const p of particles
-  ){
-
-    ctx.globalAlpha =
-      p.life;
-
-    ctx.fillStyle =
-      "#45ff9a";
-
-    ctx.fillRect(
-      p.x-cameraX,
-      p.y,
-      p.size,
-      p.size
-    );
-
-  }
-
-  ctx.globalAlpha = 1;
-
+  drawPlayer();
 }
 
 
-/* =====================================================
+/* =========================================================
    LOOP
-===================================================== */
+========================================================= */
 
 function loop(time){
 
-  if(!running)
-    return;
-
   const dt =
     Math.min(
-      (time-lastTime)/16.67,
-      2
+      .033,
+      (time-lastTime)/1000 || .016
     );
 
-  lastTime =
-    time;
+  lastTime = time;
 
   update(dt);
 
   draw();
 
-  requestAnimationFrame(
-    loop
-  );
+  requestAnimationFrame(loop);
+}
 
+requestAnimationFrame(loop);
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD(){
+
+  scoreEl.textContent =
+    Math.floor(score);
+
+  if(playerData){
+
+    bestEl.textContent =
+      playerData.highscore || 0;
+
+    coinsEl.textContent =
+      playerData.coins || 0;
+  }
 }
 
 
-/* =====================================================
-   GAME OVER
-===================================================== */
+/* =========================================================
+   FIREBASE PLAYER
+========================================================= */
 
-async function endGame(){
+async function loadPlayer(){
 
-  if(!running)
+  if(!user) return;
+
+  try{
+
+    await ensurePlayer();
+
+    const ref =
+      doc(
+        db,
+        "players",
+        user.uid
+      );
+
+    const snap =
+      await getDoc(ref);
+
+    if(snap.exists()){
+
+      playerData =
+        snap.data();
+
+      updateHUD();
+
+      renderSkins();
+    }
+
+  }catch(err){
+
+    console.error(err);
+
+    showError(
+      "Spielerdaten konnten nicht geladen werden."
+    );
+  }
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+const provider =
+  new GoogleAuthProvider();
+
+async function login(){
+
+  try{
+
+    await signInWithPopup(
+      auth,
+      provider
+    );
+
+  }catch(err){
+
+    console.error(err);
+
+    /*
+      Popup blockiert?
+      Redirect verwenden.
+    */
+
+    if(
+      err.code ===
+      "auth/popup-blocked"
+      ||
+      err.code ===
+      "auth/popup-closed-by-user"
+    ){
+
+      await signInWithRedirect(
+        auth,
+        provider
+      );
+
+      return;
+    }
+
+    if(
+      err.code ===
+      "auth/unauthorized-domain"
+    ){
+
+      showError(
+        "Diese GitHub-Pages-Domain muss in Firebase Authentication → Authorized domains eingetragen werden."
+      );
+
+      return;
+    }
+
+    showError(
+      err.message || "Login fehlgeschlagen."
+    );
+  }
+}
+
+
+/*
+  Redirect-Ergebnis.
+*/
+
+getRedirectResult(auth)
+.catch(err=>{
+
+  if(err){
+
+    console.error(err);
+
+    if(
+      err.code ===
+      "auth/unauthorized-domain"
+    ){
+
+      showError(
+        "GitHub-Pages-Domain ist in Firebase nicht freigegeben."
+      );
+    }
+  }
+
+});
+
+
+onAuthStateChanged(
+  auth,
+  async currentUser=>{
+
+    user = currentUser;
+
+    if(user){
+
+      document.getElementById(
+        "loginBtn"
+      ).textContent =
+        "✓ ANGEMELDET";
+
+      document.getElementById(
+        "loginBtn"
+      ).disabled = true;
+
+      document.getElementById(
+        "logoutBtn"
+      ).classList.remove("hidden");
+
+      document.getElementById(
+        "loginText"
+      ).textContent =
+        "Angemeldet als " +
+        (user.displayName || user.email);
+
+      await loadPlayer();
+
+    }else{
+
+      document.getElementById(
+        "loginBtn"
+      ).textContent =
+        "MIT GOOGLE ANMELDEN";
+
+      document.getElementById(
+        "loginBtn"
+      ).disabled = false;
+
+      document.getElementById(
+        "logoutBtn"
+      ).classList.add("hidden");
+
+      playerData = null;
+
+      updateHUD();
+    }
+  }
+);
+
+
+/* =========================================================
+   SKINS
+========================================================= */
+
+function renderSkins(){
+
+  const container =
+    document.getElementById(
+      "skinCards"
+    );
+
+  container.innerHTML = "";
+
+  const owned =
+    playerData?.ownedSkins || ["green"];
+
+  for(
+    const [id,skin] of
+    Object.entries(SKINS)
+  ){
+
+    const div =
+      document.createElement("div");
+
+    div.className="skin";
+
+    const preview =
+      document.createElement("div");
+
+    preview.className =
+      "skinPreview";
+
+    preview.style.background =
+      skin.color;
+
+    preview.style.color =
+      skin.color;
+
+    const title =
+      document.createElement("div");
+
+    title.innerHTML =
+      `<b>${skin.name}</b>`;
+
+    const price =
+      document.createElement("div");
+
+    price.className="small";
+
+    price.textContent =
+      skin.price === 0
+        ? "Kostenlos"
+        : "🪙 "+skin.price;
+
+
+    const btn =
+      document.createElement("button");
+
+
+    if(owned.includes(id)){
+
+      if(
+        playerData?.skin === id
+      ){
+
+        btn.textContent =
+          "AKTIV";
+
+        btn.disabled = true;
+
+      }else{
+
+        btn.textContent =
+          "AUSWÄHLEN";
+
+        btn.onclick =
+          ()=>chooseSkin(id);
+      }
+
+    }else{
+
+      btn.textContent =
+        "KAUFEN";
+
+      btn.onclick =
+        ()=>purchaseSkin(id);
+    }
+
+
+    div.append(
+      preview,
+      title,
+      price,
+      btn
+    );
+
+    container.appendChild(div);
+  }
+}
+
+
+async function purchaseSkin(id){
+
+  if(!user){
+
+    showError(
+      "Melde dich zuerst mit Google an."
+    );
+
     return;
-
-  running = false;
-
-  const earned =
-    Math.floor(
-      score/100
-    );
-
-  finalScore.textContent =
-    score.toLocaleString(
-      "de-DE"
-    );
-
-  finalBest.textContent =
-    Math.max(
-      player.highscore,
-      score
-    ).toLocaleString(
-      "de-DE"
-    );
-
-  earnedCoins.textContent =
-    "+"+
-    earned;
-
-  gameOver.classList.remove(
-    "hidden"
-  );
-
-
-  /*
-    SCORE + COINS werden
-    serverseitig gespeichert.
-  */
+  }
 
   try{
 
     const result =
-      await submitRun({
-        score:Math.floor(score)
-      });
+      await buySkin({skin:id});
 
-    const data =
-      result.data || {};
+    playerData.coins =
+      result.data.coins;
 
-    player.highscore =
-      Number(
-        data.highscore ||
-        player.highscore
-      );
+    playerData.skin =
+      result.data.skin;
 
-    player.coins =
-      Number(
-        data.coins ||
-        player.coins
-      );
+    playerData.ownedSkins =
+      result.data.ownedSkins;
 
     updateHUD();
 
-  }catch(error){
+    renderSkins();
 
-    console.error(
-      "Run speichern:",
-      error
+  }catch(err){
+
+    console.error(err);
+
+    showError(
+      err.message ||
+      "Skin konnte nicht gekauft werden."
     );
-
   }
-
 }
 
 
-/* =====================================================
-   RETRY
-===================================================== */
+async function chooseSkin(id){
 
-document
-  .getElementById("retry")
-  .onclick =
-  () => {
+  if(!user) return;
 
-    startGame();
+  try{
 
-  };
+    await selectSkin({
+      skin:id
+    });
 
+    playerData.skin = id;
 
-/* =====================================================
-   SHOP
-===================================================== */
+    renderSkins();
 
-function renderShop(){
+  }catch(err){
 
-  shopGrid.innerHTML = "";
+    console.error(err);
 
-  for(
-    const skin of skins
-  ){
-
-    const owned =
-      player.ownedSkins
-        .includes(
-          skin.id
-        );
-
-    const selected =
-      player.skin === skin.id;
-
-    const item =
-      document.createElement(
-        "div"
-      );
-
-    item.className =
-      "skin";
-
-    item.innerHTML = `
-
-      <div
-        class="skinIcon"
-        style="
-          background:${skin.color};
-          box-shadow:0 0 25px ${skin.color};
-        "
-      ></div>
-
-      <div class="skinName">
-        ${skin.name}
-      </div>
-
-      <div class="skinPrice">
-        ${
-          skin.price === 0
-          ? "STARTER"
-          : skin.price+" COINS"
-        }
-      </div>
-
-      <button
-        class="skinBtn ${
-          selected ? "selected" : ""
-        }"
-      >
-        ${
-          selected
-          ? "AUSGEWÄHLT"
-          : owned
-            ? "AUSWÄHLEN"
-            : "KAUFEN"
-        }
-      </button>
-
-    `;
-
-    const btn =
-      item.querySelector(
-        ".skinBtn"
-      );
-
-    btn.onclick =
-    async () => {
-
-      if(selected)
-        return;
-
-
-      if(owned){
-
-        try{
-
-          const result =
-            await selectSkin({
-              skin:skin.id
-            });
-
-          const data =
-            result.data;
-
-          player.skin =
-            data.skin;
-
-          renderShop();
-
-        }catch(error){
-
-          console.error(error);
-
-          alert(
-            "Skin konnte nicht ausgewählt werden."
-          );
-
-        }
-
-        return;
-
-      }
-
-
-      try{
-
-        const result =
-          await buySkin({
-            skin:skin.id
-          });
-
-        const data =
-          result.data;
-
-        player.coins =
-          Number(
-            data.coins
-          );
-
-        player.skin =
-          data.skin;
-
-        player.ownedSkins =
-          data.ownedSkins || [];
-
-        updateHUD();
-
-        renderShop();
-
-      }catch(error){
-
-        console.error(error);
-
-        if(
-          error.code ===
-          "functions/failed-precondition"
-        ){
-
-          alert(
-            "Du hast nicht genug Coins."
-          );
-
-        }else{
-
-          alert(
-            "Kauf konnte nicht durchgeführt werden."
-          );
-
-        }
-
-      }
-
-    };
-
-    shopGrid.appendChild(
-      item
+    showError(
+      err.message ||
+      "Skin konnte nicht ausgewählt werden."
     );
-
   }
-
 }
 
 
-document
-  .getElementById("shopBtn")
-  .onclick =
-  () => {
+/* =========================================================
+   LEADERBOARD
+========================================================= */
 
-    renderShop();
+function loadLeaderboard(){
 
-    document
-      .getElementById("shopModal")
-      .classList.remove(
-        "hidden"
-      );
+  if(!user){
 
-  };
+    document.getElementById(
+      "leaderboard"
+    ).innerHTML =
+      `<div class="small">
+        Bitte zuerst anmelden.
+      </div>`;
 
-
-/* =====================================================
-   RANGLISTE
-===================================================== */
-
-let rankingUnsubscribe =
-  null;
-
-function startRanking(){
-
-  if(rankingUnsubscribe){
-
-    rankingUnsubscribe();
-
+    return;
   }
+
 
   const q =
     query(
-
-      collection(
-        db,
-        "players"
-      ),
-
+      collection(db,"players"),
       orderBy(
         "highscore",
         "desc"
       ),
-
       limit(100)
-
     );
 
 
-  rankingUnsubscribe =
-    onSnapshot(
+  onSnapshot(
+    q,
+    snap=>{
 
-      q,
-
-      snapshot => {
-
-        let html = "";
-
-        let pos = 1;
-
-        snapshot.forEach(
-          docSnap => {
-
-            const data =
-              docSnap.data();
-
-            const name =
-              data.name ||
-              "Player";
-
-            const score =
-              Number(
-                data.highscore || 0
-              );
-
-            html += `
-
-              <div class="rank">
-
-                <div class="rankPos">
-                  #${pos}
-                </div>
-
-                <div class="rankName">
-                  ${escapeHtml(name)}
-                </div>
-
-                <div class="rankScore">
-                  ${score.toLocaleString("de-DE")}
-                </div>
-
-              </div>
-
-            `;
-
-            pos++;
-
-          }
+      const box =
+        document.getElementById(
+          "leaderboard"
         );
 
+      box.innerHTML = "";
 
-        if(!html){
+      let position = 1;
 
-          html =
-            `<div style="color:#666">
-              Noch keine Scores vorhanden.
-            </div>`;
+      snap.forEach(docSnap=>{
 
-        }
+        const data =
+          docSnap.data();
 
-        rankingList.innerHTML =
-          html;
+        const div =
+          document.createElement(
+            "div"
+          );
 
-      },
+        div.className =
+          "rank " +
+          (
+            docSnap.id === user?.uid
+              ? "rankMe"
+              : ""
+          );
 
-      error => {
+        const name =
+          data.name ||
+          "Player";
 
-        console.error(
-          "Rangliste:",
-          error
-        );
+        div.innerHTML = `
+          <span>
+            <b>#${position}</b>
+            &nbsp; ${escapeHTML(name)}
+          </span>
 
-        rankingList.innerHTML =
-          "Rangliste konnte nicht geladen werden.";
+          <b class="green">
+            ${Number(data.highscore || 0)}
+          </b>
+        `;
 
+        box.appendChild(div);
+
+        position++;
+      });
+
+      if(!snap.size){
+
+        box.innerHTML =
+          `<div class="small">
+            Noch keine Ergebnisse.
+          </div>`;
       }
 
-    );
+    },
+    err=>{
 
+      console.error(err);
+
+      showError(
+        "Rangliste konnte nicht geladen werden."
+      );
+    }
+  );
 }
 
 
-document
-  .getElementById("rankingBtn")
-  .onclick =
-  () => {
-
-    document
-      .getElementById("rankingModal")
-      .classList.remove(
-        "hidden"
-      );
-
-  };
-
-
-function escapeHtml(text){
+function escapeHTML(text){
 
   return String(text)
     .replaceAll("&","&amp;")
@@ -2767,45 +2309,205 @@ function escapeHtml(text){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
-
 }
 
 
-window.closeModal =
-function(id){
+/* =========================================================
+   BUTTONS
+========================================================= */
 
-  document
-    .getElementById(id)
-    .classList.add(
+document
+  .getElementById("loginBtn")
+  .onclick = login;
+
+
+document
+  .getElementById("logoutBtn")
+  .onclick = async()=>{
+
+    try{
+
+      await signOut(auth);
+
+    }catch(err){
+
+      console.error(err);
+    }
+  };
+
+
+document
+  .getElementById("startBtn")
+  .onclick = startGame;
+
+
+document
+  .getElementById("retryBtn")
+  .onclick = startGame;
+
+
+document
+  .getElementById("jumpButton")
+  .onclick = jump;
+
+
+document
+  .getElementById("jumpButton")
+  .addEventListener(
+    "touchstart",
+    e=>{
+      e.preventDefault();
+      jump();
+    },
+    {passive:false}
+  );
+
+
+document
+  .getElementById("menuButton")
+  .onclick = ()=>{
+
+    running = false;
+
+    gameButtons.classList.add(
       "hidden"
     );
 
-};
+    menu.classList.remove(
+      "hidden"
+    );
+  };
 
 
-/* ESC */
+document
+  .getElementById("gameMenuBtn")
+  .onclick = ()=>{
 
-window.addEventListener(
+    gameOver.classList.add(
+      "hidden"
+    );
+
+    menu.classList.remove(
+      "hidden"
+    );
+  };
+
+
+document
+  .getElementById("skinsBtn")
+  .onclick = ()=>{
+
+    menu.classList.add(
+      "hidden"
+    );
+
+    skinsScreen.classList.remove(
+      "hidden"
+    );
+
+    renderSkins();
+  };
+
+
+document
+  .getElementById("closeSkins")
+  .onclick = ()=>{
+
+    skinsScreen.classList.add(
+      "hidden"
+    );
+
+    menu.classList.remove(
+      "hidden"
+    );
+  };
+
+
+document
+  .getElementById("rankBtn")
+  .onclick = ()=>{
+
+    menu.classList.add(
+      "hidden"
+    );
+
+    rankScreen.classList.remove(
+      "hidden"
+    );
+
+    loadLeaderboard();
+  };
+
+
+document
+  .getElementById("closeRank")
+  .onclick = ()=>{
+
+    rankScreen.classList.add(
+      "hidden"
+    );
+
+    menu.classList.remove(
+      "hidden"
+    );
+  };
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+addEventListener(
   "keydown",
-  event => {
+  e=>{
 
     if(
-      event.key === "Escape"
+      e.code === "Space" ||
+      e.code === "ArrowUp" ||
+      e.code === "KeyW"
     ){
 
-      document
-        .querySelectorAll(".modal")
-        .forEach(
-          m =>
-            m.classList.add(
-              "hidden"
-            )
-        );
+      e.preventDefault();
 
+      jump();
     }
-
   }
 );
+
+
+/* =========================================================
+   MOUSE / TOUCH
+========================================================= */
+
+canvas.addEventListener(
+  "pointerdown",
+  e=>{
+
+    if(
+      !e.target.closest("button") &&
+      !e.target.closest(".panel")
+    ){
+
+      jump();
+    }
+  }
+);
+
+
+/* =========================================================
+   INITIAL LEVEL
+========================================================= */
+
+generateLevel();
+
+playerY =
+  groundY() -
+  playerSize;
+
+grounded = true;
+canJump = true;
+
+updateHUD();
 
 </script>
 
