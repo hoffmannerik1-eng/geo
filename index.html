@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#050505">
-<title>GEOMETRY // RUSH</title>
+<meta name="theme-color" content="#050507">
+<title>Geometry Rush</title>
 
 <style>
 *{
@@ -18,20 +18,14 @@ html,body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#050505;
+  background:#050507;
   color:white;
   font-family:Arial,Helvetica,sans-serif;
 }
 
-body{
-  background:
-    radial-gradient(circle at 50% 35%,rgba(40,255,150,.08),transparent 35%),
-    #050505;
-}
-
 button{
-  font:inherit;
   border:0;
+  font:inherit;
   cursor:pointer;
 }
 
@@ -39,171 +33,171 @@ button{
   display:none!important;
 }
 
-/* LOGIN */
+/* ================= LOGIN ================= */
 
-#loginScreen{
+#login{
   position:fixed;
   inset:0;
   z-index:1000;
   display:flex;
-  align-items:center;
   justify-content:center;
-  padding:20px;
+  align-items:center;
   background:
-    radial-gradient(circle at center,rgba(69,255,154,.12),transparent 32%),
-    #050505;
+    radial-gradient(circle at 50% 45%,rgba(0,255,140,.12),transparent 35%),
+    #050507;
 }
 
-.loginBox{
-  width:min(430px,100%);
+.loginCard{
+  width:min(430px,92%);
   padding:40px 28px;
   text-align:center;
-  border:1px solid rgba(69,255,154,.25);
   border-radius:28px;
-  background:rgba(10,15,13,.88);
+  background:rgba(12,14,16,.92);
+  border:1px solid rgba(69,255,154,.25);
   box-shadow:
-    0 0 70px rgba(69,255,154,.08),
-    inset 0 0 40px rgba(69,255,154,.025);
+    0 0 80px rgba(69,255,154,.1),
+    inset 0 0 50px rgba(255,255,255,.015);
   backdrop-filter:blur(20px);
 }
 
 .logo{
-  font-size:42px;
+  font-size:clamp(38px,10vw,58px);
   font-weight:1000;
   letter-spacing:5px;
   color:#45ff9a;
-  text-shadow:0 0 30px rgba(69,255,154,.55);
+  text-shadow:
+    0 0 20px #45ff9a,
+    0 0 60px rgba(69,255,154,.3);
 }
 
-.subtitle{
-  margin-top:10px;
+.logoSub{
+  margin-top:8px;
   color:#777;
-  font-size:13px;
-  letter-spacing:3px;
+  letter-spacing:5px;
+  font-size:11px;
 }
 
-.googleBtn{
+.google{
   width:100%;
-  margin-top:35px;
+  margin-top:32px;
   padding:16px;
   border-radius:14px;
-  background:white;
+  background:#fff;
   color:#111;
-  font-weight:800;
-  transition:.2s;
+  font-weight:900;
 }
 
-.googleBtn:hover{
-  transform:translateY(-2px);
-}
-
-.googleBtn:active{
-  transform:scale(.98);
-}
-
-#errorBox{
-  margin-top:16px;
-  color:#ff6262;
+.loginError{
+  min-height:20px;
+  margin-top:15px;
+  color:#ff5b67;
   font-size:13px;
-  line-height:1.5;
 }
 
-/* APP */
+/* ================= APP ================= */
 
-#app{
+#game{
+  position:fixed;
+  inset:0;
+}
+
+canvas{
+  display:block;
   width:100%;
   height:100%;
-  position:relative;
 }
 
-.topbar{
+/* ================= TOP HUD ================= */
+
+.top{
   position:absolute;
   z-index:20;
   top:0;
   left:0;
   right:0;
-  height:72px;
+  height:90px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding:0 18px;
-  background:linear-gradient(to bottom,rgba(0,0,0,.85),transparent);
+  align-items:center;
+  padding:14px 20px;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.8),
+    transparent
+  );
+  pointer-events:none;
 }
 
 .brand{
-  font-weight:1000;
-  letter-spacing:3px;
   color:#45ff9a;
+  font-size:15px;
+  font-weight:1000;
+  letter-spacing:4px;
 }
 
-.user{
+.account{
   display:flex;
   align-items:center;
   gap:10px;
 }
 
-.user img{
-  width:36px;
-  height:36px;
+.avatar{
+  width:37px;
+  height:37px;
   border-radius:50%;
   border:2px solid #45ff9a;
 }
 
-.logout{
-  background:#111;
+.name{
+  max-width:150px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
   color:#aaa;
-  padding:9px 12px;
-  border-radius:10px;
-  font-size:12px;
+  font-size:13px;
 }
 
-/* HUD */
+/* ================= HUD ================= */
 
 .hud{
   position:absolute;
-  z-index:10;
-  top:82px;
+  z-index:20;
+  top:90px;
   left:50%;
   transform:translateX(-50%);
   display:flex;
-  gap:12px;
+  gap:10px;
+  pointer-events:none;
 }
 
 .stat{
   min-width:105px;
-  padding:10px 16px;
+  padding:8px 14px;
   text-align:center;
+  background:rgba(5,8,7,.72);
   border:1px solid rgba(69,255,154,.2);
   border-radius:13px;
-  background:rgba(0,0,0,.55);
   backdrop-filter:blur(10px);
 }
 
 .statLabel{
-  font-size:9px;
   color:#666;
+  font-size:8px;
   letter-spacing:2px;
 }
 
 .statValue{
   margin-top:3px;
-  font-size:22px;
-  font-weight:1000;
   color:#45ff9a;
+  font-size:21px;
+  font-weight:1000;
 }
 
-/* GAME */
+/* ================= START ================= */
 
-#gameCanvas{
-  width:100%;
-  height:100%;
-  display:block;
-  background:#050505;
-}
-
-#startPanel{
+.start{
   position:absolute;
-  z-index:15;
+  z-index:10;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
@@ -211,53 +205,88 @@ button{
   pointer-events:none;
 }
 
-.gameTitle{
-  font-size:clamp(42px,10vw,92px);
+.startTitle{
+  font-size:clamp(50px,12vw,110px);
   font-weight:1000;
-  letter-spacing:8px;
-  color:#45ff9a;
+  letter-spacing:10px;
+  color:#fff;
   text-shadow:
-    0 0 20px rgba(69,255,154,.5),
-    0 0 60px rgba(69,255,154,.2);
+    0 0 10px #45ff9a,
+    0 0 40px rgba(69,255,154,.5);
 }
 
-.gameHint{
-  margin-top:14px;
-  color:#777;
-  font-size:13px;
-  letter-spacing:2px;
+.startTitle span{
+  color:#45ff9a;
 }
+
+.startHint{
+  margin-top:12px;
+  color:#777;
+  letter-spacing:3px;
+  font-size:11px;
+}
+
+/* ================= MENU ================= */
+
+.menu{
+  position:absolute;
+  z-index:30;
+  left:20px;
+  bottom:20px;
+  display:flex;
+  gap:8px;
+}
+
+.menu button{
+  padding:11px 15px;
+  color:#aaa;
+  background:rgba(8,10,10,.8);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+}
+
+.menu button:hover{
+  color:#45ff9a;
+  border-color:rgba(69,255,154,.3);
+}
+
+/* ================= OVER ================= */
 
 #gameOver{
   position:absolute;
-  z-index:30;
+  z-index:100;
   inset:0;
   display:flex;
   justify-content:center;
   align-items:center;
   background:rgba(0,0,0,.72);
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(12px);
 }
 
-.gameOverBox{
-  width:min(420px,90%);
-  text-align:center;
+.overCard{
+  width:min(430px,90%);
   padding:32px;
-  border:1px solid rgba(69,255,154,.25);
-  border-radius:24px;
-  background:#090d0b;
+  text-align:center;
+  border-radius:25px;
+  background:#090b0c;
+  border:1px solid rgba(69,255,154,.2);
 }
 
 .overTitle{
+  color:#45ff9a;
   font-size:38px;
   font-weight:1000;
-  color:#45ff9a;
+  letter-spacing:3px;
 }
 
-.result{
-  margin:20px 0;
-  color:#aaa;
+.results{
+  margin:22px 0;
   line-height:2;
+  color:#999;
+}
+
+.results strong{
+  color:white;
 }
 
 .mainBtn{
@@ -267,69 +296,45 @@ button{
   background:#45ff9a;
   color:#031008;
   font-weight:1000;
-  box-shadow:0 0 30px rgba(69,255,154,.2);
 }
 
-.secondaryBtn{
+.darkBtn{
   width:100%;
-  margin-top:10px;
+  margin-top:9px;
   padding:13px;
   border-radius:13px;
-  background:#111;
   color:#aaa;
+  background:#151718;
 }
 
-/* SIDE MENU */
-
-.menu{
-  position:absolute;
-  z-index:25;
-  left:18px;
-  bottom:18px;
-  display:flex;
-  gap:9px;
-}
-
-.menuBtn{
-  padding:11px 15px;
-  border-radius:12px;
-  background:rgba(10,10,10,.8);
-  color:#aaa;
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.menuBtn:hover{
-  color:#45ff9a;
-}
-
-/* MODALS */
+/* ================= MODALS ================= */
 
 .modal{
   position:absolute;
-  z-index:50;
+  z-index:200;
   inset:0;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   padding:20px;
-  background:rgba(0,0,0,.75);
-  backdrop-filter:blur(12px);
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(15px);
 }
 
-.modalBox{
-  width:min(650px,100%);
-  max-height:85vh;
+.modalCard{
+  width:min(700px,100%);
+  max-height:86vh;
   overflow:auto;
   padding:25px;
-  border:1px solid rgba(69,255,154,.2);
-  border-radius:22px;
-  background:#090d0b;
+  border-radius:24px;
+  background:#090b0c;
+  border:1px solid rgba(69,255,154,.22);
 }
 
 .modalHeader{
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   margin-bottom:20px;
 }
 
@@ -337,17 +342,19 @@ button{
   color:#45ff9a;
   font-size:25px;
   font-weight:1000;
+  letter-spacing:2px;
 }
 
 .close{
-  background:#151515;
-  color:#aaa;
-  width:35px;
-  height:35px;
+  width:36px;
+  height:36px;
   border-radius:10px;
+  background:#151718;
+  color:#aaa;
+  font-size:22px;
 }
 
-/* SHOP */
+/* ================= SHOP ================= */
 
 .shopGrid{
   display:grid;
@@ -356,62 +363,62 @@ button{
 }
 
 .skin{
-  padding:15px;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:15px;
-  background:#0d1110;
+  padding:18px 12px;
   text-align:center;
+  background:#0e1112;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;
 }
 
-.skinPreview{
+.skinIcon{
   width:55px;
   height:55px;
-  margin:auto;
-  margin-bottom:10px;
+  margin:4px auto 16px;
+  border-radius:9px;
   transform:rotate(45deg);
-  border-radius:7px;
 }
 
 .skinName{
-  font-weight:800;
   font-size:13px;
+  font-weight:900;
 }
 
 .skinPrice{
-  color:#777;
-  font-size:12px;
-  margin:6px 0;
+  margin:7px 0;
+  color:#666;
+  font-size:11px;
 }
 
-.skin button{
+.skinBtn{
   width:100%;
   padding:9px;
   border-radius:9px;
   background:#45ff9a;
+  color:#06100a;
   font-size:11px;
-  font-weight:800;
+  font-weight:900;
 }
 
-.skin button.owned{
-  background:#151515;
+.skinBtn.selected{
+  background:#151718;
   color:#45ff9a;
 }
 
-/* RANKING */
+/* ================= RANKING ================= */
 
 .rank{
   display:grid;
-  grid-template-columns:45px 1fr 100px;
+  grid-template-columns:50px 1fr 120px;
   align-items:center;
   padding:13px;
   margin-bottom:7px;
   border-radius:12px;
-  background:#0d1110;
+  background:#0e1112;
 }
 
-.rankNumber{
+.rankPos{
   color:#555;
-  font-weight:900;
+  font-weight:1000;
 }
 
 .rankName{
@@ -426,17 +433,26 @@ button{
   font-weight:1000;
 }
 
-/* MOBILE */
+/* ================= MOBILE ================= */
 
 @media(max-width:600px){
+
+  .top{
+    padding:12px;
+  }
+
+  .name{
+    display:none;
+  }
+
   .hud{
     top:78px;
     gap:5px;
   }
 
   .stat{
-    min-width:75px;
-    padding:7px 8px;
+    min-width:76px;
+    padding:7px 6px;
   }
 
   .statValue{
@@ -451,17 +467,13 @@ button{
     grid-template-columns:repeat(2,1fr);
   }
 
-  .brand{
-    font-size:13px;
+  .menu{
+    left:10px;
+    bottom:10px;
   }
 
-  .user img{
-    width:30px;
-    height:30px;
-  }
-
-  .logout{
-    display:none;
+  .menu button{
+    padding:10px 11px;
   }
 }
 </style>
@@ -471,48 +483,51 @@ button{
 
 <!-- LOGIN -->
 
-<div id="loginScreen">
-  <div class="loginBox">
+<div id="login">
 
-    <div class="logo">GEOMETRY</div>
-    <div class="subtitle">RUSH // GLOBAL</div>
+  <div class="loginCard">
 
-    <button id="googleLogin" class="googleBtn">
+    <div class="logo">
+      GEOMETRY
+    </div>
+
+    <div class="logoSub">
+      RUSH // GLOBAL
+    </div>
+
+    <button id="loginBtn" class="google">
       Mit Google anmelden
     </button>
 
-    <div id="errorBox"></div>
+    <div id="loginError" class="loginError"></div>
 
   </div>
+
 </div>
 
 
-<!-- APP -->
+<!-- GAME -->
 
-<div id="app" class="hidden">
+<div id="game" class="hidden">
 
-  <div class="topbar">
+  <div class="top">
 
     <div class="brand">
       GEOMETRY // RUSH
     </div>
 
-    <div class="user">
+    <div class="account">
 
-      <span id="userName"></span>
+      <div id="playerName" class="name">
+        Player
+      </div>
 
-      <img id="userAvatar" src="" alt="">
-
-      <button id="logoutBtn" class="logout">
-        AUSLOGGEN
-      </button>
+      <img id="avatar" class="avatar" alt="">
 
     </div>
 
   </div>
 
-
-  <!-- HUD -->
 
   <div class="hud">
 
@@ -523,7 +538,7 @@ button{
 
     <div class="stat">
       <div class="statLabel">BEST</div>
-      <div id="highscore" class="statValue">0</div>
+      <div id="best" class="statValue">0</div>
     </div>
 
     <div class="stat">
@@ -534,31 +549,29 @@ button{
   </div>
 
 
-  <canvas id="gameCanvas"></canvas>
+  <canvas id="canvas"></canvas>
 
 
-  <div id="startPanel">
+  <div id="start" class="start">
 
-    <div class="gameTitle">
-      RUSH
+    <div class="startTitle">
+      <span>GEO</span>METRY
     </div>
 
-    <div class="gameHint">
-      KLICKEN / LEERTASTE / TIPpen zum STARTEN
+    <div class="startHint">
+      KLICKEN • LEERTASTE • TAP
     </div>
 
   </div>
 
 
-  <!-- MENU -->
-
   <div class="menu">
 
-    <button id="shopBtn" class="menuBtn">
+    <button id="shopBtn">
       ◈ SKINS
     </button>
 
-    <button id="rankingBtn" class="menuBtn">
+    <button id="rankingBtn">
       ★ RANGLISTE
     </button>
 
@@ -569,13 +582,13 @@ button{
 
   <div id="gameOver" class="hidden">
 
-    <div class="gameOverBox">
+    <div class="overCard">
 
       <div class="overTitle">
         RUN ENDE
       </div>
 
-      <div class="result">
+      <div class="results">
 
         SCORE:
         <strong id="finalScore">0</strong>
@@ -586,15 +599,15 @@ button{
         <br>
 
         COINS:
-        <strong id="finalCoins">0</strong>
+        <strong id="earnedCoins">0</strong>
 
       </div>
 
-      <button id="retryBtn" class="mainBtn">
+      <button id="retry" class="mainBtn">
         NOCHMAL
       </button>
 
-      <button id="backBtn" class="secondaryBtn">
+      <button id="home" class="darkBtn">
         ZURÜCK
       </button>
 
@@ -607,7 +620,7 @@ button{
 
   <div id="shopModal" class="modal hidden">
 
-    <div class="modalBox">
+    <div class="modalCard">
 
       <div class="modalHeader">
 
@@ -615,7 +628,10 @@ button{
           SKIN SHOP
         </div>
 
-        <button class="close" onclick="closeModal('shopModal')">
+        <button
+          class="close"
+          onclick="closeModal('shopModal')"
+        >
           ×
         </button>
 
@@ -632,7 +648,7 @@ button{
 
   <div id="rankingModal" class="modal hidden">
 
-    <div class="modalBox">
+    <div class="modalCard">
 
       <div class="modalHeader">
 
@@ -640,7 +656,10 @@ button{
           GLOBAL RANGLISTE
         </div>
 
-        <button class="close" onclick="closeModal('rankingModal')">
+        <button
+          class="close"
+          onclick="closeModal('rankingModal')"
+        >
           ×
         </button>
 
@@ -681,7 +700,6 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc,
   collection,
   query,
   orderBy,
@@ -705,62 +723,98 @@ const firebaseConfig = {
 };
 
 
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp =
+  initializeApp(firebaseConfig);
 
-const auth = getAuth(firebaseApp);
+const auth =
+  getAuth(firebaseApp);
 
-const db = getFirestore(firebaseApp);
+const db =
+  getFirestore(firebaseApp);
 
-/*
-  WICHTIG:
-  Deine Cloud Function muss ebenfalls in
-  europe-west1 laufen.
-*/
-const functions = getFunctions(
-  firebaseApp,
-  "europe-west1"
-);
+const functions =
+  getFunctions(
+    firebaseApp,
+    "europe-west1"
+  );
 
-const submitScore = httpsCallable(
-  functions,
-  "submitScore"
-);
+
+const ensurePlayer =
+  httpsCallable(
+    functions,
+    "ensurePlayer"
+  );
+
+const submitRun =
+  httpsCallable(
+    functions,
+    "submitRun"
+  );
+
+const buySkin =
+  httpsCallable(
+    functions,
+    "buySkin"
+  );
+
+const selectSkin =
+  httpsCallable(
+    functions,
+    "selectSkin"
+  );
 
 
 /* =====================================================
    ELEMENTE
 ===================================================== */
 
-const loginScreen = document.getElementById("loginScreen");
-const app = document.getElementById("app");
+const login =
+  document.getElementById("login");
 
-const googleLogin = document.getElementById("googleLogin");
-const errorBox = document.getElementById("errorBox");
+const game =
+  document.getElementById("game");
 
-const userName = document.getElementById("userName");
-const userAvatar = document.getElementById("userAvatar");
+const loginBtn =
+  document.getElementById("loginBtn");
 
-const logoutBtn = document.getElementById("logoutBtn");
+const loginError =
+  document.getElementById("loginError");
 
-const scoreEl = document.getElementById("score");
-const highscoreEl = document.getElementById("highscore");
-const coinsEl = document.getElementById("coins");
+const playerName =
+  document.getElementById("playerName");
 
-const startPanel = document.getElementById("startPanel");
-const gameOver = document.getElementById("gameOver");
+const avatar =
+  document.getElementById("avatar");
 
-const finalScore = document.getElementById("finalScore");
-const finalBest = document.getElementById("finalBest");
-const finalCoins = document.getElementById("finalCoins");
+const scoreEl =
+  document.getElementById("score");
 
-const retryBtn = document.getElementById("retryBtn");
-const backBtn = document.getElementById("backBtn");
+const bestEl =
+  document.getElementById("best");
 
-const shopBtn = document.getElementById("shopBtn");
-const rankingBtn = document.getElementById("rankingBtn");
+const coinsEl =
+  document.getElementById("coins");
 
-const shopGrid = document.getElementById("shopGrid");
-const rankingList = document.getElementById("rankingList");
+const start =
+  document.getElementById("start");
+
+const gameOver =
+  document.getElementById("gameOver");
+
+const finalScore =
+  document.getElementById("finalScore");
+
+const finalBest =
+  document.getElementById("finalBest");
+
+const earnedCoins =
+  document.getElementById("earnedCoins");
+
+const shopGrid =
+  document.getElementById("shopGrid");
+
+const rankingList =
+  document.getElementById("rankingList");
 
 
 /* =====================================================
@@ -792,38 +846,52 @@ const skins = [
   },
 
   {
-    id:"blue",
+    id:"cyan",
     name:"CYBER",
-    price:25,
-    color:"#3db7ff"
+    price:50,
+    color:"#32e8ff"
   },
 
   {
     id:"purple",
     name:"VOID",
-    price:50,
-    color:"#b05cff"
+    price:100,
+    color:"#a95cff"
   },
 
   {
     id:"orange",
     name:"FIRE",
-    price:100,
-    color:"#ff8c42"
+    price:200,
+    color:"#ff7b32"
   },
 
   {
     id:"pink",
     name:"LASER",
-    price:150,
-    color:"#ff4fc3"
+    price:350,
+    color:"#ff42c8"
   },
 
   {
     id:"white",
     name:"GHOST",
-    price:250,
+    price:600,
     color:"#ffffff"
+  },
+
+  {
+    id:"gold",
+    name:"GOLD",
+    price:1000,
+    color:"#ffd84d"
+  },
+
+  {
+    id:"red",
+    name:"INFERNO",
+    price:2000,
+    color:"#ff3c4a"
   }
 
 ];
@@ -833,44 +901,42 @@ const skins = [
    LOGIN
 ===================================================== */
 
-googleLogin.addEventListener("click", async () => {
+loginBtn.onclick =
+async () => {
 
-  errorBox.textContent = "";
+  loginError.textContent = "";
 
-  googleLogin.disabled = true;
-  googleLogin.textContent = "ANMELDUNG...";
+  loginBtn.disabled = true;
+  loginBtn.textContent =
+    "ANMELDUNG...";
 
-  try {
+  try{
 
-    const provider = new GoogleAuthProvider();
+    const provider =
+      new GoogleAuthProvider();
 
     provider.setCustomParameters({
       prompt:"select_account"
     });
 
-    await signInWithPopup(auth,provider);
+    await signInWithPopup(
+      auth,
+      provider
+    );
 
-  } catch(error) {
+  }catch(error){
 
     console.error(error);
 
-    /*
-      Falls Safari / Browser Popup blockiert:
-      automatisch Redirect versuchen.
-    */
-
     if(
-      error.code === "auth/popup-blocked" ||
-      error.code === "auth/popup-closed-by-user"
+      error.code ===
+      "auth/popup-blocked"
     ){
 
-      try {
+      try{
 
-        const provider = new GoogleAuthProvider();
-
-        provider.setCustomParameters({
-          prompt:"select_account"
-        });
+        const provider =
+          new GoogleAuthProvider();
 
         await signInWithRedirect(
           auth,
@@ -879,7 +945,7 @@ googleLogin.addEventListener("click", async () => {
 
         return;
 
-      } catch(e){
+      }catch(e){
 
         showLoginError(e);
 
@@ -891,54 +957,49 @@ googleLogin.addEventListener("click", async () => {
 
     }
 
-  } finally {
+  }finally{
 
-    googleLogin.disabled = false;
-    googleLogin.textContent = "Mit Google anmelden";
+    loginBtn.disabled = false;
+
+    loginBtn.textContent =
+      "Mit Google anmelden";
 
   }
 
-});
+};
 
 
 function showLoginError(error){
 
-  const code = error?.code || "";
+  const code =
+    error?.code || "";
 
-  let text = "Anmeldung fehlgeschlagen.";
+  const messages = {
 
-  if(code === "auth/configuration-not-found"){
-    text =
-      "Firebase Authentication ist noch nicht richtig eingerichtet.";
-  }
+    "auth/configuration-not-found":
+      "Firebase Authentication ist nicht eingerichtet.",
 
-  if(code === "auth/operation-not-allowed"){
-    text =
-      "Google-Anmeldung ist in Firebase noch nicht aktiviert.";
-  }
+    "auth/operation-not-allowed":
+      "Google-Anmeldung ist in Firebase nicht aktiviert.",
 
-  if(code === "auth/unauthorized-domain"){
-    text =
-      "Diese GitHub-Pages-Domain ist in Firebase nicht freigegeben.";
-  }
+    "auth/unauthorized-domain":
+      "Deine GitHub-Pages-Domain muss in Firebase unter Authorized domains eingetragen werden.",
 
-  if(code === "auth/invalid-api-key"){
-    text =
-      "Der Firebase API-Key ist ungültig.";
-  }
+    "auth/invalid-api-key":
+      "Der Firebase API-Key ist ungültig.",
 
-  if(code === "auth/network-request-failed"){
-    text =
-      "Netzwerkfehler. Prüfe deine Internetverbindung.";
-  }
+    "auth/network-request-failed":
+      "Netzwerkfehler."
 
-  errorBox.innerHTML =
-    `${text}<br><small>${code}</small>`;
+  };
+
+  loginError.innerHTML =
+    `${messages[code] || "Anmeldung fehlgeschlagen."}
+    <br>
+    <small>${code}</small>`;
 
 }
 
-
-/* Redirect Ergebnis */
 
 try{
 
@@ -947,73 +1008,101 @@ try{
 }catch(error){
 
   if(error){
-
     console.error(error);
-
   }
 
 }
 
 
 /* =====================================================
-   AUTH STATE
+   AUTH
 ===================================================== */
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(
+  auth,
+  async user => {
 
-  if(!user){
+    if(!user){
 
-    currentUser = null;
+      currentUser = null;
 
-    loginScreen.classList.remove("hidden");
-    app.classList.add("hidden");
+      login.classList.remove(
+        "hidden"
+      );
 
-    return;
+      game.classList.add(
+        "hidden"
+      );
+
+      return;
+
+    }
+
+    currentUser = user;
+
+    login.classList.add(
+      "hidden"
+    );
+
+    game.classList.remove(
+      "hidden"
+    );
+
+    playerName.textContent =
+      user.displayName ||
+      "Player";
+
+    if(user.photoURL){
+
+      avatar.src =
+        user.photoURL;
+
+    }
+
+    await loadPlayer();
+
+    startRanking();
 
   }
-
-  currentUser = user;
-
-  loginScreen.classList.add("hidden");
-  app.classList.remove("hidden");
-
-  userName.textContent =
-    user.displayName || "Player";
-
-  if(user.photoURL){
-
-    userAvatar.src = user.photoURL;
-
-  }
-
-  await loadPlayer();
-
-  startRankingListener();
-
-});
+);
 
 
 /* =====================================================
-   PLAYER DATEN
+   PLAYER LADEN
 ===================================================== */
 
 async function loadPlayer(){
 
-  if(!currentUser) return;
+  try{
 
-  const ref = doc(
-    db,
-    "players",
-    currentUser.uid
-  );
+    await ensurePlayer();
+
+  }catch(error){
+
+    console.error(
+      "ensurePlayer:",
+      error
+    );
+
+  }
+
 
   try{
 
-    const snap = await getDoc(ref);
+    const ref =
+      doc(
+        db,
+        "players",
+        currentUser.uid
+      );
+
+    const snap =
+      await getDoc(ref);
 
     if(snap.exists()){
 
-      const data = snap.data();
+      const data =
+        snap.data();
 
       player = {
 
@@ -1023,82 +1112,58 @@ async function loadPlayer(){
           "Player",
 
         highscore:
-          Number(data.highscore || 0),
+          Number(
+            data.highscore || 0
+          ),
 
         coins:
-          Number(data.coins || 0),
+          Number(
+            data.coins || 0
+          ),
 
         skin:
-          data.skin || "green",
+          data.skin ||
+          "green",
 
         ownedSkins:
-          Array.isArray(data.ownedSkins)
-            ? data.ownedSkins
-            : ["green"]
+          Array.isArray(
+            data.ownedSkins
+          )
+          ?
+          data.ownedSkins
+          :
+          ["green"]
 
       };
-
-    }else{
-
-      /*
-        Spielerprofil.
-        Die Highscore bleibt 0.
-      */
-
-      player = {
-
-        name:
-          currentUser.displayName ||
-          "Player",
-
-        highscore:0,
-        coins:0,
-        skin:"green",
-        ownedSkins:["green"]
-
-      };
-
-      try{
-
-        await setDoc(
-          ref,
-          {
-            name:player.name,
-            highscore:0,
-            coins:0,
-            skin:"green",
-            ownedSkins:["green"]
-          },
-          {merge:true}
-        );
-
-      }catch(e){
-
-        console.warn(
-          "Profil konnte nicht angelegt werden:",
-          e
-        );
-
-      }
 
     }
 
   }catch(error){
 
     console.error(
-      "Player laden:",
+      "Player:",
       error
     );
 
   }
 
-  highscoreEl.textContent =
-    player.highscore;
+  updateHUD();
+  renderShop();
+
+}
+
+
+function updateHUD(){
+
+  bestEl.textContent =
+    player.highscore.toLocaleString(
+      "de-DE"
+    );
 
   coinsEl.textContent =
-    player.coins;
-
-  renderShop();
+    player.coins.toLocaleString(
+      "de-DE"
+    );
 
 }
 
@@ -1107,207 +1172,38 @@ async function loadPlayer(){
    LOGOUT
 ===================================================== */
 
-logoutBtn.addEventListener(
-  "click",
-  async () => {
+document
+  .getElementById("home")
+  .onclick = () => {
 
-    await signOut(auth);
-
-  }
-);
-
-
-/* =====================================================
-   FIREBASE SCORE
-===================================================== */
-
-async function saveHighscore(score){
-
-  if(!currentUser) return;
-
-  try{
-
-    const result =
-      await submitScore({
-        score:Math.floor(score)
-      });
-
-    const data =
-      result.data || {};
-
-    const serverHighscore =
-      Number(
-        data.highscore ||
-        player.highscore ||
-        0
-      );
-
-    player.highscore =
-      Math.max(
-        player.highscore,
-        serverHighscore
-      );
-
-    highscoreEl.textContent =
-      player.highscore;
-
-  }catch(error){
-
-    console.error(
-      "Score konnte nicht gespeichert werden:",
-      error
+    gameOver.classList.add(
+      "hidden"
     );
 
-    /*
-      Offline / Function noch nicht deployed:
-      Lokaler Highscore bleibt trotzdem.
-    */
-
-    if(score > player.highscore){
-
-      player.highscore =
-        Math.floor(score);
-
-      highscoreEl.textContent =
-        player.highscore;
-
-    }
-
-  }
-
-}
-
-
-/* =====================================================
-   RANGLISTE
-===================================================== */
-
-let rankingUnsubscribe = null;
-
-function startRankingListener(){
-
-  if(rankingUnsubscribe){
-
-    rankingUnsubscribe();
-
-  }
-
-  const q = query(
-
-    collection(db,"players"),
-
-    orderBy(
-      "highscore",
-      "desc"
-    ),
-
-    limit(100)
-
-  );
-
-  rankingUnsubscribe =
-    onSnapshot(
-      q,
-      snapshot => {
-
-        let html = "";
-
-        let position = 1;
-
-        snapshot.forEach(docSnap => {
-
-          const data =
-            docSnap.data();
-
-          const name =
-            data.name || "Player";
-
-          const score =
-            Number(
-              data.highscore || 0
-            );
-
-          html += `
-
-            <div class="rank">
-
-              <div class="rankNumber">
-                #${position}
-              </div>
-
-              <div class="rankName">
-                ${escapeHtml(name)}
-              </div>
-
-              <div class="rankScore">
-                ${score.toLocaleString("de-DE")}
-              </div>
-
-            </div>
-
-          `;
-
-          position++;
-
-        });
-
-        if(!html){
-
-          html =
-            "<div style='color:#666'>Noch keine Spieler.</div>";
-
-        }
-
-        rankingList.innerHTML =
-          html;
-
-      },
-
-      error => {
-
-        console.error(
-          "Rangliste:",
-          error
-        );
-
-        rankingList.innerHTML =
-          "Rangliste konnte nicht geladen werden.";
-
-      }
-
+    start.classList.remove(
+      "hidden"
     );
 
-}
-
-
-function escapeHtml(text){
-
-  return String(text)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
+  };
 
 
 /* =====================================================
-   GAME ENGINE
+   CANVAS
 ===================================================== */
 
 const canvas =
-  document.getElementById("gameCanvas");
+  document.getElementById("canvas");
 
 const ctx =
   canvas.getContext("2d");
 
 let W = 0;
 let H = 0;
+let DPR = 1;
 
 function resize(){
 
-  const dpr =
+  DPR =
     Math.min(
       window.devicePixelRatio || 1,
       2
@@ -1320,10 +1216,10 @@ function resize(){
     window.innerHeight;
 
   canvas.width =
-    W*dpr;
+    W*DPR;
 
   canvas.height =
-    H*dpr;
+    H*DPR;
 
   canvas.style.width =
     W+"px";
@@ -1332,10 +1228,10 @@ function resize(){
     H+"px";
 
   ctx.setTransform(
-    dpr,
+    DPR,
     0,
     0,
-    dpr,
+    DPR,
     0,
     0
   );
@@ -1351,105 +1247,231 @@ resize();
 
 
 /* =====================================================
-   GAME VARIABLES
+   GAME
 ===================================================== */
 
-let gameRunning = false;
+let running = false;
 
-let gameScore = 0;
-
-let runCoins = 0;
-
-let playerY = 0;
-
-let velocityY = 0;
-
-let rotation = 0;
-
-let speed = 6;
-
-let difficulty = 1;
+let score = 0;
 
 let distance = 0;
 
-let lastTime = 0;
+let speed = 7;
 
-let obstacles = [];
+let difficulty = 1;
 
-let coinsOnMap = [];
+let playerX = 0;
+
+let playerY = 0;
+
+let playerSize = 34;
+
+let velocityY = 0;
+
+let grounded = false;
+
+let canJump = true;
+
+let rotation = 0;
+
+let platforms = [];
+
+let spikes = [];
 
 let particles = [];
 
-let stars = [];
+let lastTime = 0;
 
-let groundY = 0;
+let spawnX = 0;
+
+let cameraX = 0;
 
 
-/* Sterne */
+/* =====================================================
+   LEVEL GENERATION
+===================================================== */
 
-for(let i=0;i<100;i++){
+function resetLevel(){
 
-  stars.push({
+  platforms = [];
+  spikes = [];
 
-    x:Math.random(),
-    y:Math.random(),
-    size:
-      Math.random()*2+0.5,
+  const ground =
+    H * .78;
 
-    speed:
-      Math.random()*.5+.1
+  /*
+    Startplattform
+  */
+
+  platforms.push({
+
+    x:0,
+    y:ground,
+    w:900,
+    h:40,
+    safe:true
 
   });
+
+  spawnX = 900;
+
+}
+
+
+function generateLevel(){
+
+  while(
+    spawnX <
+    cameraX + W + 900
+  ){
+
+    const gap =
+      60 +
+      Math.random()*90;
+
+    const width =
+      150 +
+      Math.random()*180;
+
+    const y =
+      H*.55 +
+      Math.random()*H*.18;
+
+    const platform = {
+
+      x:
+        spawnX + gap,
+
+      y:y,
+
+      w:width,
+
+      h:30,
+
+      safe:true
+
+    };
+
+    platforms.push(
+      platform
+    );
+
+
+    /*
+      Rote Plattform =
+      darf NICHT betreten werden.
+    */
+
+    if(
+      Math.random() <
+      Math.min(
+        .25 + difficulty*.035,
+        .7
+      )
+    ){
+
+      const redX =
+        platform.x +
+        20 +
+        Math.random()*
+        Math.max(
+          10,
+          platform.w-60
+        );
+
+      spikes.push({
+
+        x:redX,
+
+        y:
+          platform.y-28,
+
+        w:28,
+
+        h:28
+
+      });
+
+    }
+
+
+    /*
+      Boden-Spikes zwischen Plattformen
+    */
+
+    if(
+      Math.random() <
+      Math.min(
+        .35 + difficulty*.02,
+        .75
+      )
+    ){
+
+      spikes.push({
+
+        x:
+          spawnX +
+          gap/2,
+
+        y:
+          H*.78-32,
+
+        w:
+          32,
+
+        h:
+          32
+
+      });
+
+    }
+
+
+    spawnX =
+      platform.x +
+      platform.w;
+
+  }
 
 }
 
 
 /* =====================================================
-   START
+   PARTICLES
 ===================================================== */
 
-function startGame(){
+function particleBurst(
+  x,
+  y,
+  amount=15
+){
 
-  gameRunning = true;
+  for(
+    let i=0;
+    i<amount;
+    i++
+  ){
 
-  gameScore = 0;
+    particles.push({
 
-  runCoins = 0;
+      x:x,
 
-  velocityY = 0;
+      y:y,
 
-  difficulty = 1;
+      vx:
+        (Math.random()-.5)*7,
 
-  distance = 0;
+      vy:
+        (Math.random()-.5)*7,
 
-  speed = 6;
+      life:1,
 
-  obstacles = [];
+      size:
+        2+Math.random()*5
 
-  coinsOnMap = [];
+    });
 
-  particles = [];
-
-  playerY =
-    H * .55;
-
-  startPanel.classList.add(
-    "hidden"
-  );
-
-  gameOver.classList.add(
-    "hidden"
-  );
-
-  scoreEl.textContent = "0";
-
-  coinsEl.textContent =
-    player.coins;
-
-  lastTime =
-    performance.now();
-
-  requestAnimationFrame(loop);
+  }
 
 }
 
@@ -1460,7 +1482,7 @@ function startGame(){
 
 function jump(){
 
-  if(!gameRunning){
+  if(!running){
 
     startGame();
 
@@ -1468,27 +1490,49 @@ function jump(){
 
   }
 
-  velocityY = -12;
+  /*
+    NUR EIN SPRUNG.
 
-  createParticles(
-    W*.2,
-    playerY,
-    8
-  );
+    canJump wird erst wieder true,
+    wenn der Spieler wirklich
+    auf einer Plattform landet.
+  */
+
+  if(
+    grounded &&
+    canJump
+  ){
+
+    velocityY =
+      -13.5;
+
+    grounded =
+      false;
+
+    canJump =
+      false;
+
+    particleBurst(
+      playerX-cameraX+17,
+      playerY+34,
+      10
+    );
+
+  }
 
 }
 
 
 window.addEventListener(
   "keydown",
-  e => {
+  event => {
 
     if(
-      e.code === "Space" ||
-      e.code === "ArrowUp"
+      event.code === "Space" ||
+      event.code === "ArrowUp"
     ){
 
-      e.preventDefault();
+      event.preventDefault();
 
       jump();
 
@@ -1500,12 +1544,20 @@ window.addEventListener(
 
 window.addEventListener(
   "pointerdown",
-  e => {
+  event => {
 
     if(
-      e.target.closest("button") ||
-      e.target.closest(".modal")
-    ) return;
+      event.target.closest(
+        "button"
+      ) ||
+      event.target.closest(
+        ".modal"
+      )
+    ){
+
+      return;
+
+    }
 
     jump();
 
@@ -1514,80 +1566,55 @@ window.addEventListener(
 
 
 /* =====================================================
-   SPAWN
+   START GAME
 ===================================================== */
 
-let spawnTimer = 0;
+function startGame(){
 
-function spawnObstacle(){
+  running = true;
 
-  const ground =
-    H*.76;
+  score = 0;
 
-  const type =
-    Math.random();
+  distance = 0;
 
-  if(type < .7){
+  speed = 7;
 
-    const height =
-      35 +
-      Math.random()*(
-        45 +
-        difficulty*10
-      );
+  difficulty = 1;
 
-    obstacles.push({
+  velocityY = 0;
 
-      x:W+80,
+  rotation = 0;
 
-      y:ground-height,
+  cameraX = 0;
 
-      w:
-        30 +
-        Math.random()*25,
+  playerX = 180;
 
-      h:height
+  playerY =
+    H*.78-playerSize;
 
-    });
+  grounded = true;
 
-  }else{
+  canJump = true;
 
-    const height =
-      35 +
-      Math.random()*50;
+  lastTime =
+    performance.now();
 
-    obstacles.push({
+  resetLevel();
 
-      x:W+80,
+  start.classList.add(
+    "hidden"
+  );
 
-      y:ground-height,
+  gameOver.classList.add(
+    "hidden"
+  );
 
-      w:70,
+  scoreEl.textContent =
+    "0";
 
-      h:height
-
-    });
-
-  }
-
-}
-
-
-function spawnCoin(){
-
-  coinsOnMap.push({
-
-    x:W+80,
-
-    y:
-      H*.45 +
-      Math.random()*H*.25,
-
-    r:9,
-
-    collected:false
-
-  });
+  requestAnimationFrame(
+    loop
+  );
 
 }
 
@@ -1596,82 +1623,25 @@ function spawnCoin(){
    COLLISION
 ===================================================== */
 
-function collision(a,b){
+function rectsOverlap(
+  a,
+  b
+){
 
   return (
 
-    a.x < b.x+b.w &&
+    a.x <
+      b.x+b.w &&
 
-    a.x+a.w > b.x &&
+    a.x+a.w >
+      b.x &&
 
-    a.y < b.y+b.h &&
+    a.y <
+      b.y+b.h &&
 
-    a.y+a.h > b.y
+    a.y+a.h >
+      b.y
 
-  );
-
-}
-
-
-/* =====================================================
-   PARTICLES
-===================================================== */
-
-function createParticles(
-  x,
-  y,
-  amount
-){
-
-  for(let i=0;i<amount;i++){
-
-    particles.push({
-
-      x:x,
-
-      y:y,
-
-      vx:
-        (Math.random()-.5)*5,
-
-      vy:
-        (Math.random()-.5)*5,
-
-      life:1,
-
-      size:
-        Math.random()*4+2
-
-    });
-
-  }
-
-}
-
-
-/* =====================================================
-   GAME LOOP
-===================================================== */
-
-function loop(time){
-
-  if(!gameRunning) return;
-
-  const dt =
-    Math.min(
-      (time-lastTime)/16.67,
-      2
-    );
-
-  lastTime =
-    time;
-
-  update(dt);
-
-  draw();
-
-  requestAnimationFrame(
-    loop
   );
 
 }
@@ -1683,121 +1653,173 @@ function loop(time){
 
 function update(dt){
 
+  /*
+    Geschwindigkeit steigt immer weiter.
+  */
+
   distance +=
     speed*dt;
 
-  gameScore =
+  score =
     Math.floor(
       distance/10
     );
 
-  scoreEl.textContent =
-    gameScore.toLocaleString(
-      "de-DE"
-    );
-
   difficulty =
     1 +
-    gameScore/1000;
+    score/600;
 
   speed =
     Math.min(
-      6 +
-      difficulty*1.3,
-      16
+      7 +
+      difficulty*1.5,
+      19
+    );
+
+  scoreEl.textContent =
+    score.toLocaleString(
+      "de-DE"
     );
 
 
-  /* Spieler */
+  /*
+    Kamera folgt dem Spieler.
+  */
+
+  playerX +=
+    speed*dt;
+
+  cameraX =
+    playerX -
+    W*.2;
+
+
+  generateLevel();
+
+
+  /*
+    Schwerkraft
+  */
 
   velocityY +=
-    .7*dt;
+    .72*dt;
+
+  const oldY =
+    playerY;
 
   playerY +=
     velocityY*dt;
 
-  groundY =
-    H*.76;
+  grounded = false;
 
-  const playerSize =
-    34;
 
-  if(
-    playerY+playerSize >=
-    groundY
+  const playerWorld = {
+
+    x:
+      playerX,
+
+    y:
+      playerY,
+
+    w:
+      playerSize,
+
+    h:
+      playerSize
+
+  };
+
+
+  /*
+    Plattform-Landung
+
+    Wichtig:
+    Nur von oben.
+  */
+
+  for(
+    const p of platforms
   ){
 
-    playerY =
-      groundY-playerSize;
+    const previousBottom =
+      oldY+playerSize;
 
-    velocityY = 0;
-
-  }
-
-
-  /* Spawn */
-
-  spawnTimer -=
-    dt;
-
-  const spawnDistance =
-    Math.max(
-      35,
-      90 -
-      difficulty*5
-    );
-
-  if(
-    spawnTimer <= 0
-  ){
-
-    spawnObstacle();
+    const currentBottom =
+      playerY+playerSize;
 
     if(
-      Math.random() <
-      .55
+
+      playerX+playerSize >
+        p.x &&
+
+      playerX <
+        p.x+p.w &&
+
+      previousBottom <= p.y+5 &&
+
+      currentBottom >= p.y &&
+
+      velocityY >= 0
+
     ){
 
-      spawnCoin();
+      playerY =
+        p.y-playerSize;
+
+      velocityY = 0;
+
+      grounded = true;
+
+      canJump = true;
+
+      break;
 
     }
 
-    spawnTimer =
-      spawnDistance;
+  }
+
+
+  /*
+    Wenn wir runterfallen:
+    Game Over.
+  */
+
+  if(
+    playerY >
+    H+100
+  ){
+
+    endGame();
+
+    return;
 
   }
 
 
-  /* Hindernisse */
+  /*
+    Rote Gefahren
+  */
 
   for(
-    let i=obstacles.length-1;
-    i>=0;
-    i--
+    const spike of spikes
   ){
 
-    const o =
-      obstacles[i];
+    const s = {
 
-    o.x -=
-      speed*dt;
+      x:spike.x,
 
-    const p = {
+      y:spike.y,
 
-      x:W*.2,
+      w:spike.w,
 
-      y:playerY,
-
-      w:playerSize,
-
-      h:playerSize
+      h:spike.h
 
     };
 
     if(
-      collision(
-        p,
-        o
+      rectsOverlap(
+        playerWorld,
+        s
       )
     ){
 
@@ -1807,80 +1829,31 @@ function update(dt){
 
     }
 
-    if(
-      o.x+o.w < -100
-    ){
-
-      obstacles.splice(
-        i,
-        1
-      );
-
-    }
-
   }
 
 
-  /* Coins */
+  /*
+    Alte Plattformen entfernen.
+  */
 
-  for(
-    let i=coinsOnMap.length-1;
-    i>=0;
-    i--
-  ){
+  platforms =
+    platforms.filter(
+      p =>
+        p.x+p.w >
+        cameraX-500
+    );
 
-    const c =
-      coinsOnMap[i];
-
-    c.x -=
-      speed*dt;
-
-    if(!c.collected){
-
-      const dx =
-        c.x -
-        (W*.2+playerSize/2);
-
-      const dy =
-        c.y -
-        (playerY+playerSize/2);
-
-      const d =
-        Math.sqrt(
-          dx*dx+dy*dy
-        );
-
-      if(d < 25){
-
-        c.collected = true;
-
-        runCoins++;
-
-        createParticles(
-          c.x,
-          c.y,
-          12
-        );
-
-      }
-
-    }
-
-    if(
-      c.x < -50
-    ){
-
-      coinsOnMap.splice(
-        i,
-        1
-      );
-
-    }
-
-  }
+  spikes =
+    spikes.filter(
+      s =>
+        s.x+s.w >
+        cameraX-500
+    );
 
 
-  /* Partikel */
+  /*
+    Partikel
+  */
 
   for(
     let i=particles.length-1;
@@ -1897,8 +1870,11 @@ function update(dt){
     p.y +=
       p.vy*dt;
 
+    p.vy +=
+      .2*dt;
+
     p.life -=
-      .04*dt;
+      .045*dt;
 
     if(
       p.life <= 0
@@ -1930,9 +1906,11 @@ function draw(){
   );
 
 
-  /* Background */
+  /*
+    Hintergrund
+  */
 
-  const gradient =
+  const bg =
     ctx.createLinearGradient(
       0,
       0,
@@ -1940,18 +1918,23 @@ function draw(){
       H
     );
 
-  gradient.addColorStop(
+  bg.addColorStop(
     0,
-    "#020403"
+    "#030507"
   );
 
-  gradient.addColorStop(
+  bg.addColorStop(
+    .55,
+    "#07110d"
+  );
+
+  bg.addColorStop(
     1,
-    "#07100b"
+    "#020303"
   );
 
   ctx.fillStyle =
-    gradient;
+    bg;
 
   ctx.fillRect(
     0,
@@ -1961,66 +1944,93 @@ function draw(){
   );
 
 
-  /* Sterne */
+  /*
+    Neon-Kreis im Hintergrund
+  */
 
-  for(
-    const s of stars
-  ){
-
-    let x =
-      (s.x*W -
-      distance*s.speed*.2)
-      % W;
-
-    if(x<0) x+=W;
-
-    ctx.globalAlpha =
-      .25+s.size*.12;
-
-    ctx.fillStyle =
-      "#45ff9a";
-
-    ctx.fillRect(
-      x,
-      s.y*H,
-      s.size,
-      s.size
+  const glow =
+    ctx.createRadialGradient(
+      W*.5,
+      H*.45,
+      10,
+      W*.5,
+      H*.45,
+      H*.55
     );
 
-  }
+  glow.addColorStop(
+    0,
+    "rgba(69,255,154,.10)"
+  );
 
-  ctx.globalAlpha = 1;
+  glow.addColorStop(
+    1,
+    "rgba(69,255,154,0)"
+  );
+
+  ctx.fillStyle =
+    glow;
+
+  ctx.fillRect(
+    0,
+    0,
+    W,
+    H
+  );
 
 
-  /* Grid */
+  /*
+    Grid
+  */
 
   ctx.strokeStyle =
-    "rgba(69,255,154,.06)";
+    "rgba(69,255,154,.055)";
 
   ctx.lineWidth = 1;
 
-  const gridSize = 50;
+  const grid = 60;
+
+  const offset =
+    -(cameraX*.35)%grid;
 
   for(
-    let x=0;
+    let x=offset;
     x<W;
-    x+=gridSize
+    x+=grid
   ){
-
-    const gx =
-      (x-distance*.5)
-      % gridSize;
 
     ctx.beginPath();
 
     ctx.moveTo(
-      gx,
-      H*.25
+      x,
+      H*.2
     );
 
     ctx.lineTo(
-      gx,
-      H*.76
+      x,
+      H*.78
+    );
+
+    ctx.stroke();
+
+  }
+
+  for(
+    let y=H*.2;
+    y<H*.78;
+    y+=grid
+  ){
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      0,
+      y
+    );
+
+    ctx.lineTo(
+      W,
+      y
     );
 
     ctx.stroke();
@@ -2028,83 +2038,80 @@ function draw(){
   }
 
 
-  /* Boden */
-
-  const ground =
-    H*.76;
+  /*
+    Boden
+  */
 
   ctx.fillStyle =
-    "#08140e";
+    "#07110c";
 
   ctx.fillRect(
     0,
-    ground,
+    H*.78,
     W,
-    H-ground
+    H*.22
   );
 
-  ctx.strokeStyle =
-    "#45ff9a";
 
-  ctx.shadowBlur = 18;
-
-  ctx.shadowColor =
-    "#45ff9a";
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    0,
-    ground
-  );
-
-  ctx.lineTo(
-    W,
-    ground
-  );
-
-  ctx.stroke();
-
-  ctx.shadowBlur = 0;
-
-
-  /* Hindernisse */
+  /*
+    Plattformen
+  */
 
   for(
-    const o of obstacles
+    const p of platforms
   ){
 
-    ctx.save();
+    const x =
+      p.x-cameraX;
 
-    ctx.fillStyle =
-      "#45ff9a";
+    if(
+      x > W+100 ||
+      x+p.w < -100
+    ) continue;
+
+
+    ctx.save();
 
     ctx.shadowColor =
       "#45ff9a";
 
-    ctx.shadowBlur = 18;
-
-    ctx.fillRect(
-      o.x,
-      o.y,
-      o.w,
-      o.h
-    );
+    ctx.shadowBlur =
+      18;
 
     ctx.fillStyle =
-      "#0b1710";
+      "#45ff9a";
 
     ctx.fillRect(
-      o.x+5,
-      o.y+5,
-      Math.max(
-        2,
-        o.w-10
-      ),
-      Math.max(
-        2,
-        o.h-10
-      )
+      x,
+      p.y,
+      p.w,
+      p.h
+    );
+
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle =
+      "#07100b";
+
+    ctx.fillRect(
+      x+5,
+      p.y+7,
+      p.w-10,
+      p.h-7
+    );
+
+    /*
+      kleine Leuchtlinien
+    */
+
+    ctx.fillStyle =
+      "rgba(255,255,255,.35)";
+
+    ctx.fillRect(
+      x+8,
+      p.y+3,
+      p.w-16,
+      2
     );
 
     ctx.restore();
@@ -2112,43 +2119,76 @@ function draw(){
   }
 
 
-  /* Coins */
+  /*
+    ROTE GEFAHREN
+  */
 
   for(
-    const c of coinsOnMap
+    const s of spikes
   ){
 
-    if(c.collected)
-      continue;
+    const x =
+      s.x-cameraX;
+
+    if(
+      x > W+100 ||
+      x+s.w < -100
+    ) continue;
+
 
     ctx.save();
 
-    ctx.translate(
-      c.x,
-      c.y
-    );
+    ctx.shadowColor =
+      "#ff304f";
 
-    ctx.rotate(
-      performance.now()/400
-    );
+    ctx.shadowBlur =
+      20;
 
     ctx.fillStyle =
-      "#ffd84a";
-
-    ctx.shadowColor =
-      "#ffd84a";
-
-    ctx.shadowBlur = 18;
+      "#ff304f";
 
     ctx.beginPath();
 
-    ctx.arc(
-      0,
-      0,
-      c.r,
-      0,
-      Math.PI*2
+    ctx.moveTo(
+      x,
+      s.y+s.h
     );
+
+    ctx.lineTo(
+      x+s.w/2,
+      s.y
+    );
+
+    ctx.lineTo(
+      x+s.w,
+      s.y+s.h
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      "#24070b";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      x+7,
+      s.y+s.h-5
+    );
+
+    ctx.lineTo(
+      x+s.w/2,
+      s.y+8
+    );
+
+    ctx.lineTo(
+      x+s.w-7,
+      s.y+s.h-5
+    );
+
+    ctx.closePath();
 
     ctx.fill();
 
@@ -2157,62 +2197,105 @@ function draw(){
   }
 
 
-  /* Player */
-
-  const px =
-    W*.2;
-
-  const size =
-    34;
+  /*
+    Spieler
+  */
 
   const skin =
     skins.find(
-      s => s.id===player.skin
+      s =>
+        s.id === player.skin
     ) || skins[0];
+
+  const px =
+    playerX-cameraX;
+
+  const py =
+    playerY;
+
 
   ctx.save();
 
   ctx.translate(
-    px+size/2,
-    playerY+size/2
+    px+playerSize/2,
+    py+playerSize/2
   );
 
-  rotation +=
-    velocityY*.008;
+  /*
+    Cube dreht sich beim Springen.
+  */
+
+  if(!grounded){
+
+    rotation +=
+      .14;
+
+  }else{
+
+    rotation =
+      Math.round(
+        rotation/
+        (Math.PI/2)
+      )*
+      (Math.PI/2);
+
+  }
 
   ctx.rotate(
     rotation
   );
 
-  ctx.fillStyle =
-    skin.color;
-
   ctx.shadowColor =
     skin.color;
 
-  ctx.shadowBlur = 25;
+  ctx.shadowBlur =
+    28;
+
+  ctx.fillStyle =
+    skin.color;
 
   ctx.fillRect(
-    -size/2,
-    -size/2,
-    size,
-    size
+    -17,
+    -17,
+    34,
+    34
+  );
+
+  ctx.shadowBlur = 0;
+
+  ctx.fillStyle =
+    "#050706";
+
+  ctx.fillRect(
+    -9,
+    -9,
+    18,
+    18
   );
 
   ctx.fillStyle =
-    "#07100b";
+    "rgba(255,255,255,.8)";
 
   ctx.fillRect(
-    -size/2+7,
-    -size/2+7,
-    size-14,
-    size-14
+    -5,
+    -7,
+    4,
+    4
+  );
+
+  ctx.fillRect(
+    4,
+    -7,
+    4,
+    4
   );
 
   ctx.restore();
 
 
-  /* Partikel */
+  /*
+    Partikel
+  */
 
   for(
     const p of particles
@@ -2225,7 +2308,7 @@ function draw(){
       "#45ff9a";
 
     ctx.fillRect(
-      p.x,
+      p.x-cameraX,
       p.y,
       p.size,
       p.size
@@ -2239,123 +2322,109 @@ function draw(){
 
 
 /* =====================================================
+   LOOP
+===================================================== */
+
+function loop(time){
+
+  if(!running)
+    return;
+
+  const dt =
+    Math.min(
+      (time-lastTime)/16.67,
+      2
+    );
+
+  lastTime =
+    time;
+
+  update(dt);
+
+  draw();
+
+  requestAnimationFrame(
+    loop
+  );
+
+}
+
+
+/* =====================================================
    GAME OVER
 ===================================================== */
 
 async function endGame(){
 
-  if(!gameRunning)
+  if(!running)
     return;
 
-  gameRunning = false;
+  running = false;
 
-  const oldBest =
-    player.highscore;
-
-  if(
-    gameScore >
-    player.highscore
-  ){
-
-    player.highscore =
-      gameScore;
-
-  }
-
-  /*
-    Coins werden lokal hinzugefügt.
-  */
-
-  player.coins +=
-    runCoins;
-
-  highscoreEl.textContent =
-    player.highscore;
-
-  coinsEl.textContent =
-    player.coins;
+  const earned =
+    Math.floor(
+      score/100
+    );
 
   finalScore.textContent =
-    gameScore.toLocaleString(
+    score.toLocaleString(
       "de-DE"
     );
 
   finalBest.textContent =
-    player.highscore.toLocaleString(
+    Math.max(
+      player.highscore,
+      score
+    ).toLocaleString(
       "de-DE"
     );
 
-  finalCoins.textContent =
-    runCoins;
-
-
-  /*
-    Sichere Highscore-Funktion.
-  */
-
-  if(
-    gameScore >
-    oldBest
-  ){
-
-    await saveHighscore(
-      gameScore
-    );
-
-  }
-
-
-  /*
-    Spielerdaten lokal / Firestore.
-  */
-
-  if(currentUser){
-
-    try{
-
-      await setDoc(
-
-        doc(
-          db,
-          "players",
-          currentUser.uid
-        ),
-
-        {
-          name:
-            player.name,
-
-          coins:
-            player.coins,
-
-          skin:
-            player.skin,
-
-          ownedSkins:
-            player.ownedSkins
-
-        },
-
-        {
-          merge:true
-        }
-
-      );
-
-    }catch(error){
-
-      console.warn(
-        "Spielerdaten konnten nicht gespeichert werden.",
-        error
-      );
-
-    }
-
-  }
+  earnedCoins.textContent =
+    "+"+
+    earned;
 
   gameOver.classList.remove(
     "hidden"
   );
+
+
+  /*
+    SCORE + COINS werden
+    serverseitig gespeichert.
+  */
+
+  try{
+
+    const result =
+      await submitRun({
+        score:Math.floor(score)
+      });
+
+    const data =
+      result.data || {};
+
+    player.highscore =
+      Number(
+        data.highscore ||
+        player.highscore
+      );
+
+    player.coins =
+      Number(
+        data.coins ||
+        player.coins
+      );
+
+    updateHUD();
+
+  }catch(error){
+
+    console.error(
+      "Run speichern:",
+      error
+    );
+
+  }
 
 }
 
@@ -2364,30 +2433,14 @@ async function endGame(){
    RETRY
 ===================================================== */
 
-retryBtn.addEventListener(
-  "click",
+document
+  .getElementById("retry")
+  .onclick =
   () => {
 
     startGame();
 
-  }
-);
-
-
-backBtn.addEventListener(
-  "click",
-  () => {
-
-    gameOver.classList.add(
-      "hidden"
-    );
-
-    startPanel.classList.remove(
-      "hidden"
-    );
-
-  }
-);
+  };
 
 
 /* =====================================================
@@ -2404,26 +2457,30 @@ function renderShop(){
 
     const owned =
       player.ownedSkins
-        .includes(skin.id);
+        .includes(
+          skin.id
+        );
 
     const selected =
       player.skin === skin.id;
 
-    const div =
+    const item =
       document.createElement(
         "div"
       );
 
-    div.className =
+    item.className =
       "skin";
 
-    div.innerHTML = `
+    item.innerHTML = `
 
       <div
-        class="skinPreview"
-        style="background:${skin.color};
-        box-shadow:0 0 25px ${skin.color}">
-      </div>
+        class="skinIcon"
+        style="
+          background:${skin.color};
+          box-shadow:0 0 25px ${skin.color};
+        "
+      ></div>
 
       <div class="skinName">
         ${skin.name}
@@ -2432,82 +2489,123 @@ function renderShop(){
       <div class="skinPrice">
         ${
           skin.price === 0
-            ? "STARTER"
-            : skin.price+" COINS"
+          ? "STARTER"
+          : skin.price+" COINS"
         }
       </div>
 
       <button
-        class="${owned ? "owned" : ""}"
+        class="skinBtn ${
+          selected ? "selected" : ""
+        }"
       >
         ${
           selected
-            ? "AUSGEWÄHLT"
-            : owned
-              ? "AUSWÄHLEN"
-              : "KAUFEN"
+          ? "AUSGEWÄHLT"
+          : owned
+            ? "AUSWÄHLEN"
+            : "KAUFEN"
         }
       </button>
 
     `;
 
-    const button =
-      div.querySelector(
-        "button"
+    const btn =
+      item.querySelector(
+        ".skinBtn"
       );
 
-    button.addEventListener(
-      "click",
-      () => {
+    btn.onclick =
+    async () => {
 
-        if(owned){
+      if(selected)
+        return;
+
+
+      if(owned){
+
+        try{
+
+          const result =
+            await selectSkin({
+              skin:skin.id
+            });
+
+          const data =
+            result.data;
 
           player.skin =
-            skin.id;
-
-          savePlayer();
+            data.skin;
 
           renderShop();
 
-          return;
+        }catch(error){
 
-        }
-
-        if(
-          player.coins <
-          skin.price
-        ){
+          console.error(error);
 
           alert(
-            "Du brauchst mehr Coins!"
+            "Skin konnte nicht ausgewählt werden."
           );
-
-          return;
 
         }
 
-        player.coins -=
-          skin.price;
+        return;
 
-        player.ownedSkins.push(
-          skin.id
-        );
+      }
+
+
+      try{
+
+        const result =
+          await buySkin({
+            skin:skin.id
+          });
+
+        const data =
+          result.data;
+
+        player.coins =
+          Number(
+            data.coins
+          );
 
         player.skin =
-          skin.id;
+          data.skin;
 
-        coinsEl.textContent =
-          player.coins;
+        player.ownedSkins =
+          data.ownedSkins || [];
 
-        savePlayer();
+        updateHUD();
 
         renderShop();
 
+      }catch(error){
+
+        console.error(error);
+
+        if(
+          error.code ===
+          "functions/failed-precondition"
+        ){
+
+          alert(
+            "Du hast nicht genug Coins."
+          );
+
+        }else{
+
+          alert(
+            "Kauf konnte nicht durchgeführt werden."
+          );
+
+        }
+
       }
-    );
+
+    };
 
     shopGrid.appendChild(
-      div
+      item
     );
 
   }
@@ -2515,60 +2613,9 @@ function renderShop(){
 }
 
 
-async function savePlayer(){
-
-  if(!currentUser)
-    return;
-
-  try{
-
-    await setDoc(
-
-      doc(
-        db,
-        "players",
-        currentUser.uid
-      ),
-
-      {
-        name:
-          player.name,
-
-        coins:
-          player.coins,
-
-        skin:
-          player.skin,
-
-        ownedSkins:
-          player.ownedSkins
-
-      },
-
-      {
-        merge:true
-      }
-
-    );
-
-  }catch(error){
-
-    console.error(
-      "Speichern:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   MODALS
-===================================================== */
-
-shopBtn.addEventListener(
-  "click",
+document
+  .getElementById("shopBtn")
+  .onclick =
   () => {
 
     renderShop();
@@ -2579,12 +2626,128 @@ shopBtn.addEventListener(
         "hidden"
       );
 
+  };
+
+
+/* =====================================================
+   RANGLISTE
+===================================================== */
+
+let rankingUnsubscribe =
+  null;
+
+function startRanking(){
+
+  if(rankingUnsubscribe){
+
+    rankingUnsubscribe();
+
   }
-);
+
+  const q =
+    query(
+
+      collection(
+        db,
+        "players"
+      ),
+
+      orderBy(
+        "highscore",
+        "desc"
+      ),
+
+      limit(100)
+
+    );
 
 
-rankingBtn.addEventListener(
-  "click",
+  rankingUnsubscribe =
+    onSnapshot(
+
+      q,
+
+      snapshot => {
+
+        let html = "";
+
+        let pos = 1;
+
+        snapshot.forEach(
+          docSnap => {
+
+            const data =
+              docSnap.data();
+
+            const name =
+              data.name ||
+              "Player";
+
+            const score =
+              Number(
+                data.highscore || 0
+              );
+
+            html += `
+
+              <div class="rank">
+
+                <div class="rankPos">
+                  #${pos}
+                </div>
+
+                <div class="rankName">
+                  ${escapeHtml(name)}
+                </div>
+
+                <div class="rankScore">
+                  ${score.toLocaleString("de-DE")}
+                </div>
+
+              </div>
+
+            `;
+
+            pos++;
+
+          }
+        );
+
+
+        if(!html){
+
+          html =
+            `<div style="color:#666">
+              Noch keine Scores vorhanden.
+            </div>`;
+
+        }
+
+        rankingList.innerHTML =
+          html;
+
+      },
+
+      error => {
+
+        console.error(
+          "Rangliste:",
+          error
+        );
+
+        rankingList.innerHTML =
+          "Rangliste konnte nicht geladen werden.";
+
+      }
+
+    );
+
+}
+
+
+document
+  .getElementById("rankingBtn")
+  .onclick =
   () => {
 
     document
@@ -2593,8 +2756,19 @@ rankingBtn.addEventListener(
         "hidden"
       );
 
-  }
-);
+  };
+
+
+function escapeHtml(text){
+
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
 
 
 window.closeModal =
@@ -2613,9 +2787,11 @@ function(id){
 
 window.addEventListener(
   "keydown",
-  e => {
+  event => {
 
-    if(e.key === "Escape"){
+    if(
+      event.key === "Escape"
+    ){
 
       document
         .querySelectorAll(".modal")
@@ -2630,14 +2806,6 @@ window.addEventListener(
 
   }
 );
-
-
-/* =====================================================
-   INITIAL
-===================================================== */
-
-highscoreEl.textContent = "0";
-coinsEl.textContent = "0";
 
 </script>
 
