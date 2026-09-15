@@ -1,427 +1,699 @@
-```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050509">
-<title>GEOMETRY RUSH</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#050505">
+<title>GEOMETRY // RUSH</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
 html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:#050509;
-    color:white;
-    font-family:Inter,system-ui,Arial,sans-serif;
-    user-select:none;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#050505;
+  color:white;
+  font-family:Arial,Helvetica,sans-serif;
 }
+
 body{
-    background:
-      radial-gradient(circle at 50% 25%,#18223b 0,#090b13 35%,#030305 75%);
+  background:
+    radial-gradient(circle at 50% 35%,rgba(40,255,150,.08),transparent 35%),
+    #050505;
 }
+
 button{
-    border:0;
-    cursor:pointer;
-    color:white;
-    font:inherit;
+  font:inherit;
+  border:0;
+  cursor:pointer;
 }
-.hidden{display:none!important}
+
+.hidden{
+  display:none!important;
+}
 
 /* LOGIN */
 
-#login{
-    position:fixed;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:
-      radial-gradient(circle at center,#162b3a 0,#08090e 45%,#020204 100%);
-    z-index:100;
+#loginScreen{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at center,rgba(69,255,154,.12),transparent 32%),
+    #050505;
 }
+
 .loginBox{
-    width:min(430px,90vw);
-    padding:42px;
-    border:1px solid rgba(69,255,154,.25);
-    border-radius:28px;
-    background:rgba(8,12,18,.78);
-    backdrop-filter:blur(25px);
-    box-shadow:
-      0 0 80px rgba(69,255,154,.08),
-      inset 0 0 40px rgba(255,255,255,.02);
-    text-align:center;
+  width:min(430px,100%);
+  padding:40px 28px;
+  text-align:center;
+  border:1px solid rgba(69,255,154,.25);
+  border-radius:28px;
+  background:rgba(10,15,13,.88);
+  box-shadow:
+    0 0 70px rgba(69,255,154,.08),
+    inset 0 0 40px rgba(69,255,154,.025);
+  backdrop-filter:blur(20px);
 }
+
 .logo{
-    font-size:42px;
-    font-weight:1000;
-    letter-spacing:5px;
+  font-size:42px;
+  font-weight:1000;
+  letter-spacing:5px;
+  color:#45ff9a;
+  text-shadow:0 0 30px rgba(69,255,154,.55);
 }
-.green{color:#45ff9a}
-.sub{
-    opacity:.55;
-    margin:10px 0 30px;
+
+.subtitle{
+  margin-top:10px;
+  color:#777;
+  font-size:13px;
+  letter-spacing:3px;
 }
-.google{
-    width:100%;
-    padding:15px;
-    border-radius:14px;
-    background:#fff;
-    color:#111;
-    font-weight:800;
+
+.googleBtn{
+  width:100%;
+  margin-top:35px;
+  padding:16px;
+  border-radius:14px;
+  background:white;
+  color:#111;
+  font-weight:800;
+  transition:.2s;
+}
+
+.googleBtn:hover{
+  transform:translateY(-2px);
+}
+
+.googleBtn:active{
+  transform:scale(.98);
+}
+
+#errorBox{
+  margin-top:16px;
+  color:#ff6262;
+  font-size:13px;
+  line-height:1.5;
 }
 
 /* APP */
 
 #app{
-    position:fixed;
-    inset:0;
+  width:100%;
+  height:100%;
+  position:relative;
 }
 
-canvas{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
+.topbar{
+  position:absolute;
+  z-index:20;
+  top:0;
+  left:0;
+  right:0;
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.85),transparent);
 }
+
+.brand{
+  font-weight:1000;
+  letter-spacing:3px;
+  color:#45ff9a;
+}
+
+.user{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.user img{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:2px solid #45ff9a;
+}
+
+.logout{
+  background:#111;
+  color:#aaa;
+  padding:9px 12px;
+  border-radius:10px;
+  font-size:12px;
+}
+
+/* HUD */
 
 .hud{
-    position:absolute;
-    left:18px;
-    right:18px;
-    top:16px;
-    display:flex;
-    justify-content:space-between;
-    pointer-events:none;
-    z-index:10;
+  position:absolute;
+  z-index:10;
+  top:82px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:12px;
 }
+
 .stat{
-    min-width:115px;
-    padding:11px 15px;
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:15px;
-    background:rgba(5,7,12,.7);
-    backdrop-filter:blur(12px);
-}
-.label{
-    font-size:10px;
-    letter-spacing:2px;
-    opacity:.45;
-}
-.value{
-    font-size:22px;
-    font-weight:900;
-    margin-top:2px;
+  min-width:105px;
+  padding:10px 16px;
+  text-align:center;
+  border:1px solid rgba(69,255,154,.2);
+  border-radius:13px;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(10px);
 }
 
-.topButtons{
-    position:absolute;
-    right:18px;
-    bottom:18px;
-    display:flex;
-    gap:10px;
-    z-index:20;
-}
-.uiBtn{
-    padding:12px 16px;
-    border-radius:13px;
-    background:rgba(8,12,18,.82);
-    border:1px solid rgba(255,255,255,.12);
-}
-.uiBtn:hover{
-    border-color:#45ff9a;
+.statLabel{
+  font-size:9px;
+  color:#666;
+  letter-spacing:2px;
 }
 
-#startScreen,
-#shop,
-#ranking{
-    position:absolute;
-    inset:0;
-    z-index:30;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:rgba(2,3,6,.76);
-    backdrop-filter:blur(12px);
+.statValue{
+  margin-top:3px;
+  font-size:22px;
+  font-weight:1000;
+  color:#45ff9a;
 }
 
-.panel{
-    width:min(760px,92vw);
-    max-height:86vh;
-    overflow:auto;
-    padding:30px;
-    border-radius:26px;
-    border:1px solid rgba(69,255,154,.2);
-    background:rgba(8,12,18,.92);
-    box-shadow:0 0 90px rgba(69,255,154,.06);
-}
-.panel h1{
-    margin:0 0 7px;
-    font-size:34px;
-}
-.panel p{
-    opacity:.55;
+/* GAME */
+
+#gameCanvas{
+  width:100%;
+  height:100%;
+  display:block;
+  background:#050505;
 }
 
-.startButton{
-    margin-top:22px;
-    width:100%;
-    padding:17px;
-    border-radius:15px;
-    background:linear-gradient(135deg,#45ff9a,#19cfff);
-    color:#02110b;
-    font-weight:1000;
-    font-size:18px;
+#startPanel{
+  position:absolute;
+  z-index:15;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  pointer-events:none;
 }
 
-.cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-    gap:12px;
-    margin-top:20px;
-}
-.skin{
-    padding:15px;
-    border-radius:17px;
-    background:#0d1119;
-    border:1px solid rgba(255,255,255,.1);
-    text-align:center;
-}
-.skinPreview{
-    width:55px;
-    height:55px;
-    margin:0 auto 10px;
-    transform:rotate(45deg);
-    border-radius:8px;
-}
-.skin button{
-    width:100%;
-    margin-top:10px;
-    padding:9px;
-    border-radius:10px;
-    background:#171d27;
-}
-.skin button:hover{
-    background:#45ff9a;
-    color:#001108;
+.gameTitle{
+  font-size:clamp(42px,10vw,92px);
+  font-weight:1000;
+  letter-spacing:8px;
+  color:#45ff9a;
+  text-shadow:
+    0 0 20px rgba(69,255,154,.5),
+    0 0 60px rgba(69,255,154,.2);
 }
 
-.rank{
-    display:grid;
-    grid-template-columns:55px 1fr 110px;
-    gap:10px;
-    align-items:center;
-    padding:14px;
-    margin:8px 0;
-    border-radius:13px;
-    background:#0d1119;
-    border:1px solid rgba(255,255,255,.06);
+.gameHint{
+  margin-top:14px;
+  color:#777;
+  font-size:13px;
+  letter-spacing:2px;
 }
-.rank.me{
-    border-color:#45ff9a;
-    box-shadow:0 0 20px rgba(69,255,154,.08);
+
+#gameOver{
+  position:absolute;
+  z-index:30;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(8px);
 }
-.rankPos{
-    font-weight:1000;
-    font-size:20px;
+
+.gameOverBox{
+  width:min(420px,90%);
+  text-align:center;
+  padding:32px;
+  border:1px solid rgba(69,255,154,.25);
+  border-radius:24px;
+  background:#090d0b;
 }
-.rankName{
-    font-weight:800;
+
+.overTitle{
+  font-size:38px;
+  font-weight:1000;
+  color:#45ff9a;
 }
-.rankScore{
-    text-align:right;
-    font-weight:1000;
-    color:#45ff9a;
+
+.result{
+  margin:20px 0;
+  color:#aaa;
+  line-height:2;
+}
+
+.mainBtn{
+  width:100%;
+  padding:15px;
+  border-radius:13px;
+  background:#45ff9a;
+  color:#031008;
+  font-weight:1000;
+  box-shadow:0 0 30px rgba(69,255,154,.2);
+}
+
+.secondaryBtn{
+  width:100%;
+  margin-top:10px;
+  padding:13px;
+  border-radius:13px;
+  background:#111;
+  color:#aaa;
+}
+
+/* SIDE MENU */
+
+.menu{
+  position:absolute;
+  z-index:25;
+  left:18px;
+  bottom:18px;
+  display:flex;
+  gap:9px;
+}
+
+.menuBtn{
+  padding:11px 15px;
+  border-radius:12px;
+  background:rgba(10,10,10,.8);
+  color:#aaa;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.menuBtn:hover{
+  color:#45ff9a;
+}
+
+/* MODALS */
+
+.modal{
+  position:absolute;
+  z-index:50;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(12px);
+}
+
+.modalBox{
+  width:min(650px,100%);
+  max-height:85vh;
+  overflow:auto;
+  padding:25px;
+  border:1px solid rgba(69,255,154,.2);
+  border-radius:22px;
+  background:#090d0b;
+}
+
+.modalHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+.modalTitle{
+  color:#45ff9a;
+  font-size:25px;
+  font-weight:1000;
 }
 
 .close{
-    float:right;
-    background:#171d27;
-    padding:8px 12px;
-    border-radius:10px;
+  background:#151515;
+  color:#aaa;
+  width:35px;
+  height:35px;
+  border-radius:10px;
 }
 
-#death{
-    position:absolute;
-    inset:0;
-    z-index:25;
+/* SHOP */
+
+.shopGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.skin{
+  padding:15px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:15px;
+  background:#0d1110;
+  text-align:center;
+}
+
+.skinPreview{
+  width:55px;
+  height:55px;
+  margin:auto;
+  margin-bottom:10px;
+  transform:rotate(45deg);
+  border-radius:7px;
+}
+
+.skinName{
+  font-weight:800;
+  font-size:13px;
+}
+
+.skinPrice{
+  color:#777;
+  font-size:12px;
+  margin:6px 0;
+}
+
+.skin button{
+  width:100%;
+  padding:9px;
+  border-radius:9px;
+  background:#45ff9a;
+  font-size:11px;
+  font-weight:800;
+}
+
+.skin button.owned{
+  background:#151515;
+  color:#45ff9a;
+}
+
+/* RANKING */
+
+.rank{
+  display:grid;
+  grid-template-columns:45px 1fr 100px;
+  align-items:center;
+  padding:13px;
+  margin-bottom:7px;
+  border-radius:12px;
+  background:#0d1110;
+}
+
+.rankNumber{
+  color:#555;
+  font-weight:900;
+}
+
+.rankName{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.rankScore{
+  text-align:right;
+  color:#45ff9a;
+  font-weight:1000;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+  .hud{
+    top:78px;
+    gap:5px;
+  }
+
+  .stat{
+    min-width:75px;
+    padding:7px 8px;
+  }
+
+  .statValue{
+    font-size:17px;
+  }
+
+  .statLabel{
+    font-size:7px;
+  }
+
+  .shopGrid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .brand{
+    font-size:13px;
+  }
+
+  .user img{
+    width:30px;
+    height:30px;
+  }
+
+  .logout{
     display:none;
-    align-items:center;
-    justify-content:center;
-    background:rgba(2,2,5,.72);
-    backdrop-filter:blur(8px);
-}
-.deathBox{
-    text-align:center;
-    padding:35px;
-}
-.deathBox h1{
-    font-size:55px;
-    margin:0;
-}
-.new{
-    color:#45ff9a;
-    font-weight:900;
-}
-.coin{
-    color:#ffd84d;
-}
-
-#mobileJump{
-    position:absolute;
-    bottom:30px;
-    left:50%;
-    transform:translateX(-50%);
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    background:rgba(69,255,154,.08);
-    border:2px solid rgba(69,255,154,.4);
-    color:#45ff9a;
-    font-weight:1000;
-    z-index:15;
-    display:none;
-}
-
-@media(max-width:700px){
-    .hud{left:8px;right:8px}
-    .stat{min-width:90px;padding:8px}
-    .value{font-size:18px}
-    #mobileJump{display:block}
-    .topButtons{bottom:160px}
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div id="login">
-    <div class="loginBox">
-        <div class="logo">GEOMETRY <span class="green">RUSH</span></div>
-        <div class="sub">Endless. Faster. Harder.</div>
-        <button class="google" id="googleLogin">
-            Mit Google spielen
-        </button>
-        <p id="loginStatus"></p>
-    </div>
+<!-- LOGIN -->
+
+<div id="loginScreen">
+  <div class="loginBox">
+
+    <div class="logo">GEOMETRY</div>
+    <div class="subtitle">RUSH // GLOBAL</div>
+
+    <button id="googleLogin" class="googleBtn">
+      Mit Google anmelden
+    </button>
+
+    <div id="errorBox"></div>
+
+  </div>
 </div>
+
+
+<!-- APP -->
 
 <div id="app" class="hidden">
 
-<canvas id="game"></canvas>
+  <div class="topbar">
 
-<div class="hud">
+    <div class="brand">
+      GEOMETRY // RUSH
+    </div>
+
+    <div class="user">
+
+      <span id="userName"></span>
+
+      <img id="userAvatar" src="" alt="">
+
+      <button id="logoutBtn" class="logout">
+        AUSLOGGEN
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- HUD -->
+
+  <div class="hud">
+
     <div class="stat">
-        <div class="label">SCORE</div>
-        <div class="value" id="score">0</div>
+      <div class="statLabel">SCORE</div>
+      <div id="score" class="statValue">0</div>
     </div>
 
     <div class="stat">
-        <div class="label">HIGHSCORE</div>
-        <div class="value green" id="highscore">0</div>
+      <div class="statLabel">BEST</div>
+      <div id="highscore" class="statValue">0</div>
     </div>
 
     <div class="stat">
-        <div class="label">COINS</div>
-        <div class="value coin" id="coins">0</div>
+      <div class="statLabel">COINS</div>
+      <div id="coins" class="statValue">0</div>
     </div>
-</div>
 
-<div id="startScreen">
-    <div class="panel">
-        <h1>GEOMETRY <span class="green">RUSH</span></h1>
-        <p>
-            Springe über Hindernisse, sammle Coins und überlebe so lange wie möglich.
-            Das Level wird kontinuierlich schneller.
-        </p>
+  </div>
 
-        <button class="startButton" id="startButton">
-            START RUN
+
+  <canvas id="gameCanvas"></canvas>
+
+
+  <div id="startPanel">
+
+    <div class="gameTitle">
+      RUSH
+    </div>
+
+    <div class="gameHint">
+      KLICKEN / LEERTASTE / TIPpen zum STARTEN
+    </div>
+
+  </div>
+
+
+  <!-- MENU -->
+
+  <div class="menu">
+
+    <button id="shopBtn" class="menuBtn">
+      ◈ SKINS
+    </button>
+
+    <button id="rankingBtn" class="menuBtn">
+      ★ RANGLISTE
+    </button>
+
+  </div>
+
+
+  <!-- GAME OVER -->
+
+  <div id="gameOver" class="hidden">
+
+    <div class="gameOverBox">
+
+      <div class="overTitle">
+        RUN ENDE
+      </div>
+
+      <div class="result">
+
+        SCORE:
+        <strong id="finalScore">0</strong>
+        <br>
+
+        BEST:
+        <strong id="finalBest">0</strong>
+        <br>
+
+        COINS:
+        <strong id="finalCoins">0</strong>
+
+      </div>
+
+      <button id="retryBtn" class="mainBtn">
+        NOCHMAL
+      </button>
+
+      <button id="backBtn" class="secondaryBtn">
+        ZURÜCK
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- SHOP -->
+
+  <div id="shopModal" class="modal hidden">
+
+    <div class="modalBox">
+
+      <div class="modalHeader">
+
+        <div class="modalTitle">
+          SKIN SHOP
+        </div>
+
+        <button class="close" onclick="closeModal('shopModal')">
+          ×
         </button>
-    </div>
-</div>
 
-<div id="death">
-    <div class="deathBox">
-        <h1>CRASH</h1>
-        <p>Score: <b id="finalScore">0</b></p>
-        <p id="newRecord" class="new hidden">NEUER HIGHSCORE!</p>
-        <button class="startButton" id="restartButton">
-            NOCHMAL
+      </div>
+
+      <div id="shopGrid" class="shopGrid"></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- RANKING -->
+
+  <div id="rankingModal" class="modal hidden">
+
+    <div class="modalBox">
+
+      <div class="modalHeader">
+
+        <div class="modalTitle">
+          GLOBAL RANGLISTE
+        </div>
+
+        <button class="close" onclick="closeModal('rankingModal')">
+          ×
         </button>
+
+      </div>
+
+      <div id="rankingList">
+        Lade Rangliste...
+      </div>
+
     </div>
-</div>
 
-<div id="shop">
-    <div class="panel">
-        <button class="close" id="closeShop">×</button>
-        <h1>SKIN SHOP</h1>
-        <p>Coins: <b class="coin" id="shopCoins">0</b></p>
-        <div class="cards" id="skinList"></div>
-    </div>
-</div>
-
-<div id="ranking">
-    <div class="panel">
-        <button class="close" id="closeRanking">×</button>
-        <h1>GLOBAL <span class="green">RANKING</span></h1>
-        <p>Die echten Highscores aller Spieler.</p>
-        <div id="rankingList">Lade Rangliste...</div>
-    </div>
-</div>
-
-<div class="topButtons">
-    <button class="uiBtn" id="shopButton">SKINS</button>
-    <button class="uiBtn" id="rankingButton">RANGLISTE</button>
-</div>
-
-<button id="mobileJump">JUMP</button>
+  </div>
 
 </div>
+
 
 <script type="module">
 
-/* ============================================================
+/* =====================================================
    FIREBASE
-   ============================================================ */
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+===================================================== */
 
 import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
 import {
-    getFirestore,
-    doc,
-    getDoc,
-    setDoc,
-    collection,
-    query,
-    orderBy,
-    limit,
-    getDocs,
-    onSnapshot
-}
-from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 import {
-    getFunctions,
-    httpsCallable
-}
-from "https://www.gstatic.com/firebasejs/12.3.0/firebase-functions.js";
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-/*
-   HIER DEINE FIREBASE CONFIG EINTRAGEN.
-*/
+import {
+  getFunctions,
+  httpsCallable
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-functions.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqCjm8rb3YOqCIgdtG2fSzrQatUytn2-c",
@@ -432,975 +704,1942 @@ const firebaseConfig = {
   appId: "1:229525498291:web:69556b9eb4d89489e283c6"
 };
 
-const appFirebase = initializeApp(firebaseConfig);
-const auth = getAuth(appFirebase);
-const db = getFirestore(appFirebase);
-const functions = getFunctions(appFirebase);
 
-const submitScore = httpsCallable(functions,"submitScore");
+const firebaseApp = initializeApp(firebaseConfig);
+
+const auth = getAuth(firebaseApp);
+
+const db = getFirestore(firebaseApp);
+
+/*
+  WICHTIG:
+  Deine Cloud Function muss ebenfalls in
+  europe-west1 laufen.
+*/
+const functions = getFunctions(
+  firebaseApp,
+  "europe-west1"
+);
+
+const submitScore = httpsCallable(
+  functions,
+  "submitScore"
+);
+
+
+/* =====================================================
+   ELEMENTE
+===================================================== */
+
+const loginScreen = document.getElementById("loginScreen");
+const app = document.getElementById("app");
+
+const googleLogin = document.getElementById("googleLogin");
+const errorBox = document.getElementById("errorBox");
+
+const userName = document.getElementById("userName");
+const userAvatar = document.getElementById("userAvatar");
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+const scoreEl = document.getElementById("score");
+const highscoreEl = document.getElementById("highscore");
+const coinsEl = document.getElementById("coins");
+
+const startPanel = document.getElementById("startPanel");
+const gameOver = document.getElementById("gameOver");
+
+const finalScore = document.getElementById("finalScore");
+const finalBest = document.getElementById("finalBest");
+const finalCoins = document.getElementById("finalCoins");
+
+const retryBtn = document.getElementById("retryBtn");
+const backBtn = document.getElementById("backBtn");
+
+const shopBtn = document.getElementById("shopBtn");
+const rankingBtn = document.getElementById("rankingBtn");
+
+const shopGrid = document.getElementById("shopGrid");
+const rankingList = document.getElementById("rankingList");
+
+
+/* =====================================================
+   PLAYER
+===================================================== */
 
 let currentUser = null;
-let playerData = {
-    coins:0,
-    highscore:0,
-    skin:"green"
+
+let player = {
+  name:"Player",
+  highscore:0,
+  coins:0,
+  skin:"green",
+  ownedSkins:["green"]
 };
 
-const login = document.getElementById("login");
-const gameApp = document.getElementById("app");
 
-document.getElementById("googleLogin").onclick = async () => {
-    try{
-        document.getElementById("loginStatus").textContent =
-            "Anmeldung läuft...";
+/* =====================================================
+   SKINS
+===================================================== */
+
+const skins = [
+
+  {
+    id:"green",
+    name:"NEON",
+    price:0,
+    color:"#45ff9a"
+  },
+
+  {
+    id:"blue",
+    name:"CYBER",
+    price:25,
+    color:"#3db7ff"
+  },
+
+  {
+    id:"purple",
+    name:"VOID",
+    price:50,
+    color:"#b05cff"
+  },
+
+  {
+    id:"orange",
+    name:"FIRE",
+    price:100,
+    color:"#ff8c42"
+  },
+
+  {
+    id:"pink",
+    name:"LASER",
+    price:150,
+    color:"#ff4fc3"
+  },
+
+  {
+    id:"white",
+    name:"GHOST",
+    price:250,
+    color:"#ffffff"
+  }
+
+];
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+googleLogin.addEventListener("click", async () => {
+
+  errorBox.textContent = "";
+
+  googleLogin.disabled = true;
+  googleLogin.textContent = "ANMELDUNG...";
+
+  try {
+
+    const provider = new GoogleAuthProvider();
+
+    provider.setCustomParameters({
+      prompt:"select_account"
+    });
+
+    await signInWithPopup(auth,provider);
+
+  } catch(error) {
+
+    console.error(error);
+
+    /*
+      Falls Safari / Browser Popup blockiert:
+      automatisch Redirect versuchen.
+    */
+
+    if(
+      error.code === "auth/popup-blocked" ||
+      error.code === "auth/popup-closed-by-user"
+    ){
+
+      try {
 
         const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth,provider);
 
-    }catch(error){
-        console.error(error);
-        document.getElementById("loginStatus").textContent =
-            "Anmeldung fehlgeschlagen.";
+        provider.setCustomParameters({
+          prompt:"select_account"
+        });
+
+        await signInWithRedirect(
+          auth,
+          provider
+        );
+
+        return;
+
+      } catch(e){
+
+        showLoginError(e);
+
+      }
+
+    }else{
+
+      showLoginError(error);
+
     }
-};
 
-onAuthStateChanged(auth, async user => {
+  } finally {
 
-    if(!user) return;
+    googleLogin.disabled = false;
+    googleLogin.textContent = "Mit Google anmelden";
 
-    currentUser = user;
+  }
 
-    login.classList.add("hidden");
-    gameApp.classList.remove("hidden");
-
-    await loadPlayer();
-
-    listenRanking();
 });
+
+
+function showLoginError(error){
+
+  const code = error?.code || "";
+
+  let text = "Anmeldung fehlgeschlagen.";
+
+  if(code === "auth/configuration-not-found"){
+    text =
+      "Firebase Authentication ist noch nicht richtig eingerichtet.";
+  }
+
+  if(code === "auth/operation-not-allowed"){
+    text =
+      "Google-Anmeldung ist in Firebase noch nicht aktiviert.";
+  }
+
+  if(code === "auth/unauthorized-domain"){
+    text =
+      "Diese GitHub-Pages-Domain ist in Firebase nicht freigegeben.";
+  }
+
+  if(code === "auth/invalid-api-key"){
+    text =
+      "Der Firebase API-Key ist ungültig.";
+  }
+
+  if(code === "auth/network-request-failed"){
+    text =
+      "Netzwerkfehler. Prüfe deine Internetverbindung.";
+  }
+
+  errorBox.innerHTML =
+    `${text}<br><small>${code}</small>`;
+
+}
+
+
+/* Redirect Ergebnis */
+
+try{
+
+  await getRedirectResult(auth);
+
+}catch(error){
+
+  if(error){
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+onAuthStateChanged(auth, async (user) => {
+
+  if(!user){
+
+    currentUser = null;
+
+    loginScreen.classList.remove("hidden");
+    app.classList.add("hidden");
+
+    return;
+
+  }
+
+  currentUser = user;
+
+  loginScreen.classList.add("hidden");
+  app.classList.remove("hidden");
+
+  userName.textContent =
+    user.displayName || "Player";
+
+  if(user.photoURL){
+
+    userAvatar.src = user.photoURL;
+
+  }
+
+  await loadPlayer();
+
+  startRankingListener();
+
+});
+
+
+/* =====================================================
+   PLAYER DATEN
+===================================================== */
 
 async function loadPlayer(){
 
-    const ref = doc(db,"players",currentUser.uid);
+  if(!currentUser) return;
+
+  const ref = doc(
+    db,
+    "players",
+    currentUser.uid
+  );
+
+  try{
+
     const snap = await getDoc(ref);
 
-    if(!snap.exists()){
+    if(snap.exists()){
 
-        playerData = {
-            coins:0,
-            highscore:0,
-            skin:"green",
-            name:currentUser.displayName || "Player"
-        };
+      const data = snap.data();
 
-        await setDoc(ref,playerData);
+      player = {
+
+        name:
+          data.name ||
+          currentUser.displayName ||
+          "Player",
+
+        highscore:
+          Number(data.highscore || 0),
+
+        coins:
+          Number(data.coins || 0),
+
+        skin:
+          data.skin || "green",
+
+        ownedSkins:
+          Array.isArray(data.ownedSkins)
+            ? data.ownedSkins
+            : ["green"]
+
+      };
 
     }else{
-        playerData = snap.data();
+
+      /*
+        Spielerprofil.
+        Die Highscore bleibt 0.
+      */
+
+      player = {
+
+        name:
+          currentUser.displayName ||
+          "Player",
+
+        highscore:0,
+        coins:0,
+        skin:"green",
+        ownedSkins:["green"]
+
+      };
+
+      try{
+
+        await setDoc(
+          ref,
+          {
+            name:player.name,
+            highscore:0,
+            coins:0,
+            skin:"green",
+            ownedSkins:["green"]
+          },
+          {merge:true}
+        );
+
+      }catch(e){
+
+        console.warn(
+          "Profil konnte nicht angelegt werden:",
+          e
+        );
+
+      }
+
     }
 
-    updateUI();
+  }catch(error){
+
+    console.error(
+      "Player laden:",
+      error
+    );
+
+  }
+
+  highscoreEl.textContent =
+    player.highscore;
+
+  coinsEl.textContent =
+    player.coins;
+
+  renderShop();
+
 }
 
-function updateUI(){
 
-    document.getElementById("coins").textContent =
-        playerData.coins || 0;
+/* =====================================================
+   LOGOUT
+===================================================== */
 
-    document.getElementById("highscore").textContent =
-        playerData.highscore || 0;
+logoutBtn.addEventListener(
+  "click",
+  async () => {
 
-    document.getElementById("shopCoins").textContent =
-        playerData.coins || 0;
+    await signOut(auth);
+
+  }
+);
+
+
+/* =====================================================
+   FIREBASE SCORE
+===================================================== */
+
+async function saveHighscore(score){
+
+  if(!currentUser) return;
+
+  try{
+
+    const result =
+      await submitScore({
+        score:Math.floor(score)
+      });
+
+    const data =
+      result.data || {};
+
+    const serverHighscore =
+      Number(
+        data.highscore ||
+        player.highscore ||
+        0
+      );
+
+    player.highscore =
+      Math.max(
+        player.highscore,
+        serverHighscore
+      );
+
+    highscoreEl.textContent =
+      player.highscore;
+
+  }catch(error){
+
+    console.error(
+      "Score konnte nicht gespeichert werden:",
+      error
+    );
+
+    /*
+      Offline / Function noch nicht deployed:
+      Lokaler Highscore bleibt trotzdem.
+    */
+
+    if(score > player.highscore){
+
+      player.highscore =
+        Math.floor(score);
+
+      highscoreEl.textContent =
+        player.highscore;
+
+    }
+
+  }
+
 }
 
 
-/* ============================================================
+/* =====================================================
    RANGLISTE
-   ============================================================ */
+===================================================== */
 
 let rankingUnsubscribe = null;
 
-function listenRanking(){
+function startRankingListener(){
 
-    const q = query(
-        collection(db,"players"),
-        orderBy("highscore","desc"),
-        limit(100)
-    );
+  if(rankingUnsubscribe){
 
-    if(rankingUnsubscribe)
-        rankingUnsubscribe();
+    rankingUnsubscribe();
 
-    rankingUnsubscribe = onSnapshot(q,snapshot => {
+  }
 
-        const list = document.getElementById("rankingList");
+  const q = query(
 
-        list.innerHTML = "";
+    collection(db,"players"),
+
+    orderBy(
+      "highscore",
+      "desc"
+    ),
+
+    limit(100)
+
+  );
+
+  rankingUnsubscribe =
+    onSnapshot(
+      q,
+      snapshot => {
+
+        let html = "";
 
         let position = 1;
 
         snapshot.forEach(docSnap => {
 
-            const p = docSnap.data();
+          const data =
+            docSnap.data();
 
-            const row = document.createElement("div");
+          const name =
+            data.name || "Player";
 
-            row.className =
-                "rank " +
-                (docSnap.id === currentUser.uid ? "me":"");
+          const score =
+            Number(
+              data.highscore || 0
+            );
 
-            row.innerHTML = `
-                <div class="rankPos">#${position}</div>
-                <div class="rankName">
-                    ${escapeHtml(p.name || "Player")}
-                </div>
-                <div class="rankScore">
-                    ${Number(p.highscore || 0).toLocaleString("de-DE")}
-                </div>
-            `;
+          html += `
 
-            list.appendChild(row);
+            <div class="rank">
 
-            position++;
+              <div class="rankNumber">
+                #${position}
+              </div>
+
+              <div class="rankName">
+                ${escapeHtml(name)}
+              </div>
+
+              <div class="rankScore">
+                ${score.toLocaleString("de-DE")}
+              </div>
+
+            </div>
+
+          `;
+
+          position++;
+
         });
 
-        if(!snapshot.size){
-            list.innerHTML = "Noch keine Spieler.";
+        if(!html){
+
+          html =
+            "<div style='color:#666'>Noch keine Spieler.</div>";
+
         }
 
-    },error=>{
-        console.error(error);
-        document.getElementById("rankingList").textContent =
-            "Rangliste konnte nicht geladen werden.";
-    });
+        rankingList.innerHTML =
+          html;
+
+      },
+
+      error => {
+
+        console.error(
+          "Rangliste:",
+          error
+        );
+
+        rankingList.innerHTML =
+          "Rangliste konnte nicht geladen werden.";
+
+      }
+
+    );
+
 }
 
-function escapeHtml(value){
 
-    return String(value)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+function escapeHtml(text){
+
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
 }
 
 
-/* ============================================================
-   SPIEL
-   ============================================================ */
+/* =====================================================
+   GAME ENGINE
+===================================================== */
 
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas =
+  document.getElementById("gameCanvas");
 
-let W,H;
+const ctx =
+  canvas.getContext("2d");
+
+let W = 0;
+let H = 0;
 
 function resize(){
 
-    W = canvas.width = innerWidth * devicePixelRatio;
-    H = canvas.height = innerHeight * devicePixelRatio;
-
-    canvas.style.width = innerWidth+"px";
-    canvas.style.height = innerHeight+"px";
-
-    ctx.setTransform(
-        devicePixelRatio,0,0,
-        devicePixelRatio,0,0
+  const dpr =
+    Math.min(
+      window.devicePixelRatio || 1,
+      2
     );
 
-    W = innerWidth;
-    H = innerHeight;
+  W =
+    window.innerWidth;
+
+  H =
+    window.innerHeight;
+
+  canvas.width =
+    W*dpr;
+
+  canvas.height =
+    H*dpr;
+
+  canvas.style.width =
+    W+"px";
+
+  canvas.style.height =
+    H+"px";
+
+  ctx.setTransform(
+    dpr,
+    0,
+    0,
+    dpr,
+    0,
+    0
+  );
+
 }
 
-addEventListener("resize",resize);
+window.addEventListener(
+  "resize",
+  resize
+);
+
 resize();
 
-let running = false;
-let dead = false;
 
-let player;
-let obstacles = [];
-let particles = [];
-let coinsOnMap = [];
+/* =====================================================
+   GAME VARIABLES
+===================================================== */
 
-let score = 0;
+let gameRunning = false;
+
+let gameScore = 0;
+
+let runCoins = 0;
+
+let playerY = 0;
+
+let velocityY = 0;
+
+let rotation = 0;
+
+let speed = 6;
+
+let difficulty = 1;
+
 let distance = 0;
-let gameSpeed = 6;
-let gravity = .8;
-let jumpPower = -14;
 
 let lastTime = 0;
-let spawnTimer = 0;
-let coinTimer = 0;
+
+let obstacles = [];
+
+let coinsOnMap = [];
+
+let particles = [];
+
+let stars = [];
+
+let groundY = 0;
 
 
-/* ============================================================
-   SKINS
-   ============================================================ */
+/* Sterne */
 
-const skins = [
+for(let i=0;i<100;i++){
 
-    {
-        id:"green",
-        name:"NEON",
-        cost:0,
-        color:"#45ff9a"
-    },
+  stars.push({
 
-    {
-        id:"blue",
-        name:"CYBER",
-        cost:100,
-        color:"#29a7ff"
-    },
+    x:Math.random(),
+    y:Math.random(),
+    size:
+      Math.random()*2+0.5,
 
-    {
-        id:"purple",
-        name:"VOID",
-        cost:250,
-        color:"#bd5cff"
-    },
+    speed:
+      Math.random()*.5+.1
 
-    {
-        id:"red",
-        name:"INFERNO",
-        cost:500,
-        color:"#ff4d68"
-    },
+  });
 
-    {
-        id:"gold",
-        name:"GOLD",
-        cost:1000,
-        color:"#ffd84d"
-    }
-];
-
-function renderSkins(){
-
-    const list = document.getElementById("skinList");
-
-    list.innerHTML = "";
-
-    skins.forEach(skin => {
-
-        const owned =
-            skin.cost === 0 ||
-            playerData["skin_"+skin.id] === true;
-
-        const active =
-            playerData.skin === skin.id;
-
-        const div = document.createElement("div");
-
-        div.className = "skin";
-
-        div.innerHTML = `
-            <div class="skinPreview"
-                 style="background:${skin.color};
-                        box-shadow:0 0 25px ${skin.color}">
-            </div>
-
-            <b>${skin.name}</b>
-
-            <div class="coin">
-                ${owned ? "FREIGESCHALTET" :
-                  skin.cost+" COINS"}
-            </div>
-
-            <button>
-                ${active ? "AKTIV" :
-                  owned ? "AUSWÄHLEN" : "KAUFEN"}
-            </button>
-        `;
-
-        div.querySelector("button").onclick =
-            () => selectSkin(skin);
-
-        list.appendChild(div);
-    });
-}
-
-async function selectSkin(skin){
-
-    const owned =
-        skin.cost === 0 ||
-        playerData["skin_"+skin.id] === true;
-
-    if(owned){
-
-        playerData.skin = skin.id;
-
-    }else{
-
-        if(playerData.coins < skin.cost){
-            alert("Nicht genug Coins!");
-            return;
-        }
-
-        playerData.coins -= skin.cost;
-        playerData["skin_"+skin.id] = true;
-        playerData.skin = skin.id;
-    }
-
-    await setDoc(
-        doc(db,"players",currentUser.uid),
-        playerData,
-        {merge:true}
-    );
-
-    renderSkins();
-    updateUI();
 }
 
 
-/* ============================================================
-   GAME
-   ============================================================ */
-
-function resetGame(){
-
-    player = {
-        x:100,
-        y:H-180,
-        size:34,
-        vy:0,
-        grounded:false,
-        rotation:0
-    };
-
-    obstacles = [];
-    particles = [];
-    coinsOnMap = [];
-
-    score = 0;
-    distance = 0;
-
-    gameSpeed = 6;
-    spawnTimer = 0;
-    coinTimer = 0;
-
-    dead = false;
-}
+/* =====================================================
+   START
+===================================================== */
 
 function startGame(){
 
-    document.getElementById("startScreen")
-        .classList.add("hidden");
+  gameRunning = true;
 
-    document.getElementById("death")
-        .style.display = "none";
+  gameScore = 0;
 
-    resetGame();
+  runCoins = 0;
 
-    running = true;
+  velocityY = 0;
 
-    requestAnimationFrame(loop);
+  difficulty = 1;
+
+  distance = 0;
+
+  speed = 6;
+
+  obstacles = [];
+
+  coinsOnMap = [];
+
+  particles = [];
+
+  playerY =
+    H * .55;
+
+  startPanel.classList.add(
+    "hidden"
+  );
+
+  gameOver.classList.add(
+    "hidden"
+  );
+
+  scoreEl.textContent = "0";
+
+  coinsEl.textContent =
+    player.coins;
+
+  lastTime =
+    performance.now();
+
+  requestAnimationFrame(loop);
+
 }
+
+
+/* =====================================================
+   JUMP
+===================================================== */
 
 function jump(){
 
-    if(!running || dead) return;
+  if(!gameRunning){
 
-    if(player.grounded){
+    startGame();
 
-        player.vy = jumpPower;
-        player.grounded = false;
+    return;
 
-        burst(
-            player.x+player.size/2,
-            player.y+player.size,
-            12
-        );
-    }
+  }
+
+  velocityY = -12;
+
+  createParticles(
+    W*.2,
+    playerY,
+    8
+  );
+
 }
 
-addEventListener("keydown",e=>{
+
+window.addEventListener(
+  "keydown",
+  e => {
 
     if(
-        e.code === "Space" ||
-        e.code === "ArrowUp" ||
-        e.code === "KeyW"
+      e.code === "Space" ||
+      e.code === "ArrowUp"
     ){
-        e.preventDefault();
-        jump();
-    }
-});
 
-canvas.addEventListener("pointerdown",jump);
-document.getElementById("mobileJump").onclick = jump;
+      e.preventDefault();
+
+      jump();
+
+    }
+
+  }
+);
+
+
+window.addEventListener(
+  "pointerdown",
+  e => {
+
+    if(
+      e.target.closest("button") ||
+      e.target.closest(".modal")
+    ) return;
+
+    jump();
+
+  }
+);
+
+
+/* =====================================================
+   SPAWN
+===================================================== */
+
+let spawnTimer = 0;
 
 function spawnObstacle(){
 
-    const difficulty =
-        Math.min(score / 1500,1);
+  const ground =
+    H*.76;
+
+  const type =
+    Math.random();
+
+  if(type < .7){
 
     const height =
-        30 + Math.random()*75;
-
-    const width =
-        25 + Math.random()*35;
+      35 +
+      Math.random()*(
+        45 +
+        difficulty*10
+      );
 
     obstacles.push({
 
-        x:W+50,
+      x:W+80,
 
-        y:H-90-height,
+      y:ground-height,
 
-        w:width,
+      w:
+        30 +
+        Math.random()*25,
 
-        h:height,
+      h:height
 
-        spike:
-            Math.random() <
-            .45 + difficulty*.25
     });
+
+  }else{
+
+    const height =
+      35 +
+      Math.random()*50;
+
+    obstacles.push({
+
+      x:W+80,
+
+      y:ground-height,
+
+      w:70,
+
+      h:height
+
+    });
+
+  }
+
 }
+
 
 function spawnCoin(){
 
-    coinsOnMap.push({
+  coinsOnMap.push({
 
-        x:W+40,
+    x:W+80,
 
-        y:H-160-Math.random()*230,
+    y:
+      H*.45 +
+      Math.random()*H*.25,
 
-        r:8,
+    r:9,
 
-        rot:0
+    collected:false
+
+  });
+
+}
+
+
+/* =====================================================
+   COLLISION
+===================================================== */
+
+function collision(a,b){
+
+  return (
+
+    a.x < b.x+b.w &&
+
+    a.x+a.w > b.x &&
+
+    a.y < b.y+b.h &&
+
+    a.y+a.h > b.y
+
+  );
+
+}
+
+
+/* =====================================================
+   PARTICLES
+===================================================== */
+
+function createParticles(
+  x,
+  y,
+  amount
+){
+
+  for(let i=0;i<amount;i++){
+
+    particles.push({
+
+      x:x,
+
+      y:y,
+
+      vx:
+        (Math.random()-.5)*5,
+
+      vy:
+        (Math.random()-.5)*5,
+
+      life:1,
+
+      size:
+        Math.random()*4+2
+
     });
-}
 
-function update(dt){
+  }
 
-    const difficulty =
-        Math.min(score / 2500,1);
-
-    /*
-      Geschwindigkeit steigt immer weiter.
-      Später wird das Spiel absichtlich extrem schwer.
-    */
-    gameSpeed =
-        6 +
-        Math.pow(score/450,1.15);
-
-    gameSpeed =
-        Math.min(gameSpeed,18);
-
-    player.vy += gravity;
-
-    player.y += player.vy;
-
-    const ground =
-        H-90-player.size;
-
-    if(player.y >= ground){
-
-        player.y = ground;
-        player.vy = 0;
-        player.grounded = true;
-        player.rotation = 0;
-
-    }else{
-
-        player.rotation += .12;
-    }
-
-    spawnTimer -= dt;
-    coinTimer -= dt;
-
-    const spawnInterval =
-        Math.max(
-            330 -
-            difficulty*160 -
-            Math.min(score/15,100),
-            90
-        );
-
-    if(spawnTimer <= 0){
-
-        spawnObstacle();
-
-        spawnTimer = spawnInterval;
-
-        /*
-          Höhere Schwierigkeit:
-          zusätzliche Hindernisse
-        */
-        if(score > 1000 && Math.random()<.18)
-            setTimeout(spawnObstacle,120);
-    }
-
-    if(coinTimer <= 0){
-
-        spawnCoin();
-
-        coinTimer =
-            700 + Math.random()*900;
-    }
-
-    for(const o of obstacles){
-
-        o.x -= gameSpeed;
-    }
-
-    for(const c of coinsOnMap){
-
-        c.x -= gameSpeed;
-        c.rot += .08;
-    }
-
-    obstacles =
-        obstacles.filter(o=>o.x+o.w>-100);
-
-    coinsOnMap =
-        coinsOnMap.filter(c=>c.x>-50);
-
-    checkCollisions();
-
-    for(const p of particles){
-
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += .04;
-        p.life -= .02;
-    }
-
-    particles =
-        particles.filter(p=>p.life>0);
-
-    distance += gameSpeed;
-
-    score =
-        Math.floor(distance/10);
-
-    document.getElementById("score")
-        .textContent = score;
-}
-
-function checkCollisions(){
-
-    const px = player.x;
-    const py = player.y;
-    const ps = player.size;
-
-    for(const o of obstacles){
-
-        if(
-
-            px < o.x+o.w &&
-            px+ps > o.x &&
-            py < o.y+o.h &&
-            py+ps > o.y
-
-        ){
-
-            die();
-            return;
-        }
-    }
-
-    for(let i=coinsOnMap.length-1;i>=0;i--){
-
-        const c = coinsOnMap[i];
-
-        const dx =
-            px+ps/2-c.x;
-
-        const dy =
-            py+ps/2-c.y;
-
-        if(Math.sqrt(dx*dx+dy*dy)<30){
-
-            coinsOnMap.splice(i,1);
-
-            playerData.coins =
-                (playerData.coins||0)+1;
-
-            burst(c.x,c.y,16);
-
-            updateUI();
-
-            setDoc(
-                doc(db,"players",currentUser.uid),
-                {
-                    coins:playerData.coins
-                },
-                {merge:true}
-            );
-        }
-    }
-}
-
-async function die(){
-
-    if(dead) return;
-
-    dead = true;
-    running = false;
-
-    document.getElementById("finalScore")
-        .textContent = score;
-
-    const oldHigh =
-        Number(playerData.highscore||0);
-
-    document.getElementById("newRecord")
-        .classList.toggle(
-            "hidden",
-            score <= oldHigh
-        );
-
-    if(score > oldHigh){
-
-        /*
-          Score wird NICHT direkt in Firestore geschrieben.
-          Er geht über die serverseitige Cloud Function.
-        */
-
-        try{
-
-            const result =
-                await submitScore({
-                    score:score
-                });
-
-            const data = result.data;
-
-            if(data.accepted){
-
-                playerData.highscore =
-                    data.highscore;
-
-                updateUI();
-            }
-
-        }catch(error){
-
-            console.error(
-                "Score konnte nicht gespeichert werden:",
-                error
-            );
-        }
-    }
-
-    document.getElementById("death")
-        .style.display = "flex";
 }
 
 
-/* ============================================================
-   DRAW
-   ============================================================ */
-
-function draw(){
-
-    ctx.clearRect(0,0,W,H);
-
-    /*
-      Hintergrund
-    */
-
-    const gradient =
-        ctx.createLinearGradient(0,0,0,H);
-
-    gradient.addColorStop(0,"#070b16");
-    gradient.addColorStop(1,"#020205");
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0,0,W,H);
-
-    /*
-      Grid
-    */
-
-    ctx.strokeStyle =
-        "rgba(69,255,154,.06)";
-
-    ctx.lineWidth = 1;
-
-    const offset =
-        -(distance % 50);
-
-    for(let x=offset;x<W;x+=50){
-
-        ctx.beginPath();
-        ctx.moveTo(x,0);
-        ctx.lineTo(x,H);
-        ctx.stroke();
-    }
-
-    for(let y=0;y<H;y+=50){
-
-        ctx.beginPath();
-        ctx.moveTo(0,y);
-        ctx.lineTo(W,y);
-        ctx.stroke();
-    }
-
-    /*
-      Boden
-    */
-
-    ctx.fillStyle="#0a1017";
-    ctx.fillRect(0,H-90,W,90);
-
-    ctx.strokeStyle="#45ff9a";
-    ctx.shadowBlur=15;
-    ctx.shadowColor="#45ff9a";
-
-    ctx.beginPath();
-    ctx.moveTo(0,H-90);
-    ctx.lineTo(W,H-90);
-    ctx.stroke();
-
-    ctx.shadowBlur=0;
-
-    /*
-      Hindernisse
-    */
-
-    for(const o of obstacles){
-
-        ctx.save();
-
-        ctx.translate(
-            o.x+o.w/2,
-            o.y+o.h/2
-        );
-
-        if(o.spike){
-
-            ctx.fillStyle="#ff315f";
-            ctx.shadowColor="#ff315f";
-            ctx.shadowBlur=18;
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                -o.w/2,
-                o.h/2
-            );
-
-            ctx.lineTo(
-                0,
-                -o.h/2
-            );
-
-            ctx.lineTo(
-                o.w/2,
-                o.h/2
-            );
-
-            ctx.closePath();
-            ctx.fill();
-
-        }else{
-
-            ctx.fillStyle="#6c3cff";
-            ctx.shadowColor="#6c3cff";
-            ctx.shadowBlur=20;
-
-            ctx.fillRect(
-                -o.w/2,
-                -o.h/2,
-                o.w,
-                o.h
-            );
-        }
-
-        ctx.restore();
-    }
-
-    /*
-      Coins
-    */
-
-    for(const c of coinsOnMap){
-
-        ctx.save();
-
-        ctx.translate(c.x,c.y);
-        ctx.rotate(c.rot);
-
-        ctx.fillStyle="#ffd84d";
-        ctx.shadowColor="#ffd84d";
-        ctx.shadowBlur=20;
-
-        ctx.beginPath();
-        ctx.arc(0,0,c.r,0,Math.PI*2);
-        ctx.fill();
-
-        ctx.restore();
-    }
-
-    /*
-      Partikel
-    */
-
-    for(const p of particles){
-
-        ctx.globalAlpha =
-            Math.max(p.life,0);
-
-        ctx.fillStyle=p.color;
-
-        ctx.fillRect(
-            p.x,
-            p.y,
-            p.size,
-            p.size
-        );
-    }
-
-    ctx.globalAlpha=1;
-
-    /*
-      Player
-    */
-
-    if(player){
-
-        const skin =
-            skins.find(
-                s=>s.id===playerData.skin
-            ) || skins[0];
-
-        ctx.save();
-
-        ctx.translate(
-            player.x+player.size/2,
-            player.y+player.size/2
-        );
-
-        ctx.rotate(player.rotation);
-
-        ctx.fillStyle=skin.color;
-        ctx.shadowColor=skin.color;
-        ctx.shadowBlur=30;
-
-        ctx.fillRect(
-            -player.size/2,
-            -player.size/2,
-            player.size,
-            player.size
-        );
-
-        ctx.fillStyle="#06100b";
-
-        ctx.fillRect(
-            -8,
-            -8,
-            5,
-            5
-        );
-
-        ctx.fillRect(
-            4,
-            -8,
-            5,
-            5
-        );
-
-        ctx.restore();
-    }
-}
-
-function burst(x,y,count){
-
-    for(let i=0;i<count;i++){
-
-        particles.push({
-
-            x,
-            y,
-
-            vx:
-                (Math.random()-.5)*7,
-
-            vy:
-                (Math.random()-.5)*7,
-
-            size:
-                2+Math.random()*5,
-
-            life:1,
-
-            color:
-                Math.random()>.5
-                ? "#45ff9a"
-                : "#19cfff"
-        });
-    }
-}
+/* =====================================================
+   GAME LOOP
+===================================================== */
 
 function loop(time){
 
-    if(!running) return;
+  if(!gameRunning) return;
 
-    const dt =
-        Math.min(
-            time-lastTime,
-            50
-        );
+  const dt =
+    Math.min(
+      (time-lastTime)/16.67,
+      2
+    );
 
-    lastTime=time;
+  lastTime =
+    time;
 
-    update(dt);
-    draw();
+  update(dt);
 
-    requestAnimationFrame(loop);
+  draw();
+
+  requestAnimationFrame(
+    loop
+  );
+
 }
 
 
-/* ============================================================
-   UI
-   ============================================================ */
+/* =====================================================
+   UPDATE
+===================================================== */
 
-document.getElementById("startButton")
-    .onclick=startGame;
+function update(dt){
 
-document.getElementById("restartButton")
-    .onclick=startGame;
+  distance +=
+    speed*dt;
 
-document.getElementById("shopButton")
-    .onclick=()=>{
+  gameScore =
+    Math.floor(
+      distance/10
+    );
 
-        renderSkins();
+  scoreEl.textContent =
+    gameScore.toLocaleString(
+      "de-DE"
+    );
 
-        document.getElementById("shop")
-            .style.display="flex";
+  difficulty =
+    1 +
+    gameScore/1000;
+
+  speed =
+    Math.min(
+      6 +
+      difficulty*1.3,
+      16
+    );
+
+
+  /* Spieler */
+
+  velocityY +=
+    .7*dt;
+
+  playerY +=
+    velocityY*dt;
+
+  groundY =
+    H*.76;
+
+  const playerSize =
+    34;
+
+  if(
+    playerY+playerSize >=
+    groundY
+  ){
+
+    playerY =
+      groundY-playerSize;
+
+    velocityY = 0;
+
+  }
+
+
+  /* Spawn */
+
+  spawnTimer -=
+    dt;
+
+  const spawnDistance =
+    Math.max(
+      35,
+      90 -
+      difficulty*5
+    );
+
+  if(
+    spawnTimer <= 0
+  ){
+
+    spawnObstacle();
+
+    if(
+      Math.random() <
+      .55
+    ){
+
+      spawnCoin();
+
+    }
+
+    spawnTimer =
+      spawnDistance;
+
+  }
+
+
+  /* Hindernisse */
+
+  for(
+    let i=obstacles.length-1;
+    i>=0;
+    i--
+  ){
+
+    const o =
+      obstacles[i];
+
+    o.x -=
+      speed*dt;
+
+    const p = {
+
+      x:W*.2,
+
+      y:playerY,
+
+      w:playerSize,
+
+      h:playerSize
+
     };
 
-document.getElementById("closeShop")
-    .onclick=()=>{
+    if(
+      collision(
+        p,
+        o
+      )
+    ){
 
-        document.getElementById("shop")
-            .style.display="none";
-    };
+      endGame();
 
-document.getElementById("rankingButton")
-    .onclick=()=>{
+      return;
 
-        document.getElementById("ranking")
-            .style.display="flex";
-    };
+    }
 
-document.getElementById("closeRanking")
-    .onclick=()=>{
+    if(
+      o.x+o.w < -100
+    ){
 
-        document.getElementById("ranking")
-            .style.display="none";
-    };
+      obstacles.splice(
+        i,
+        1
+      );
 
-document.getElementById("shop")
-    .style.display="none";
+    }
 
-document.getElementById("ranking")
-    .style.display="none";
+  }
+
+
+  /* Coins */
+
+  for(
+    let i=coinsOnMap.length-1;
+    i>=0;
+    i--
+  ){
+
+    const c =
+      coinsOnMap[i];
+
+    c.x -=
+      speed*dt;
+
+    if(!c.collected){
+
+      const dx =
+        c.x -
+        (W*.2+playerSize/2);
+
+      const dy =
+        c.y -
+        (playerY+playerSize/2);
+
+      const d =
+        Math.sqrt(
+          dx*dx+dy*dy
+        );
+
+      if(d < 25){
+
+        c.collected = true;
+
+        runCoins++;
+
+        createParticles(
+          c.x,
+          c.y,
+          12
+        );
+
+      }
+
+    }
+
+    if(
+      c.x < -50
+    ){
+
+      coinsOnMap.splice(
+        i,
+        1
+      );
+
+    }
+
+  }
+
+
+  /* Partikel */
+
+  for(
+    let i=particles.length-1;
+    i>=0;
+    i--
+  ){
+
+    const p =
+      particles[i];
+
+    p.x +=
+      p.vx*dt;
+
+    p.y +=
+      p.vy*dt;
+
+    p.life -=
+      .04*dt;
+
+    if(
+      p.life <= 0
+    ){
+
+      particles.splice(
+        i,
+        1
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =====================================================
+   DRAW
+===================================================== */
+
+function draw(){
+
+  ctx.clearRect(
+    0,
+    0,
+    W,
+    H
+  );
+
+
+  /* Background */
+
+  const gradient =
+    ctx.createLinearGradient(
+      0,
+      0,
+      0,
+      H
+    );
+
+  gradient.addColorStop(
+    0,
+    "#020403"
+  );
+
+  gradient.addColorStop(
+    1,
+    "#07100b"
+  );
+
+  ctx.fillStyle =
+    gradient;
+
+  ctx.fillRect(
+    0,
+    0,
+    W,
+    H
+  );
+
+
+  /* Sterne */
+
+  for(
+    const s of stars
+  ){
+
+    let x =
+      (s.x*W -
+      distance*s.speed*.2)
+      % W;
+
+    if(x<0) x+=W;
+
+    ctx.globalAlpha =
+      .25+s.size*.12;
+
+    ctx.fillStyle =
+      "#45ff9a";
+
+    ctx.fillRect(
+      x,
+      s.y*H,
+      s.size,
+      s.size
+    );
+
+  }
+
+  ctx.globalAlpha = 1;
+
+
+  /* Grid */
+
+  ctx.strokeStyle =
+    "rgba(69,255,154,.06)";
+
+  ctx.lineWidth = 1;
+
+  const gridSize = 50;
+
+  for(
+    let x=0;
+    x<W;
+    x+=gridSize
+  ){
+
+    const gx =
+      (x-distance*.5)
+      % gridSize;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      gx,
+      H*.25
+    );
+
+    ctx.lineTo(
+      gx,
+      H*.76
+    );
+
+    ctx.stroke();
+
+  }
+
+
+  /* Boden */
+
+  const ground =
+    H*.76;
+
+  ctx.fillStyle =
+    "#08140e";
+
+  ctx.fillRect(
+    0,
+    ground,
+    W,
+    H-ground
+  );
+
+  ctx.strokeStyle =
+    "#45ff9a";
+
+  ctx.shadowBlur = 18;
+
+  ctx.shadowColor =
+    "#45ff9a";
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    0,
+    ground
+  );
+
+  ctx.lineTo(
+    W,
+    ground
+  );
+
+  ctx.stroke();
+
+  ctx.shadowBlur = 0;
+
+
+  /* Hindernisse */
+
+  for(
+    const o of obstacles
+  ){
+
+    ctx.save();
+
+    ctx.fillStyle =
+      "#45ff9a";
+
+    ctx.shadowColor =
+      "#45ff9a";
+
+    ctx.shadowBlur = 18;
+
+    ctx.fillRect(
+      o.x,
+      o.y,
+      o.w,
+      o.h
+    );
+
+    ctx.fillStyle =
+      "#0b1710";
+
+    ctx.fillRect(
+      o.x+5,
+      o.y+5,
+      Math.max(
+        2,
+        o.w-10
+      ),
+      Math.max(
+        2,
+        o.h-10
+      )
+    );
+
+    ctx.restore();
+
+  }
+
+
+  /* Coins */
+
+  for(
+    const c of coinsOnMap
+  ){
+
+    if(c.collected)
+      continue;
+
+    ctx.save();
+
+    ctx.translate(
+      c.x,
+      c.y
+    );
+
+    ctx.rotate(
+      performance.now()/400
+    );
+
+    ctx.fillStyle =
+      "#ffd84a";
+
+    ctx.shadowColor =
+      "#ffd84a";
+
+    ctx.shadowBlur = 18;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      0,
+      0,
+      c.r,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.restore();
+
+  }
+
+
+  /* Player */
+
+  const px =
+    W*.2;
+
+  const size =
+    34;
+
+  const skin =
+    skins.find(
+      s => s.id===player.skin
+    ) || skins[0];
+
+  ctx.save();
+
+  ctx.translate(
+    px+size/2,
+    playerY+size/2
+  );
+
+  rotation +=
+    velocityY*.008;
+
+  ctx.rotate(
+    rotation
+  );
+
+  ctx.fillStyle =
+    skin.color;
+
+  ctx.shadowColor =
+    skin.color;
+
+  ctx.shadowBlur = 25;
+
+  ctx.fillRect(
+    -size/2,
+    -size/2,
+    size,
+    size
+  );
+
+  ctx.fillStyle =
+    "#07100b";
+
+  ctx.fillRect(
+    -size/2+7,
+    -size/2+7,
+    size-14,
+    size-14
+  );
+
+  ctx.restore();
+
+
+  /* Partikel */
+
+  for(
+    const p of particles
+  ){
+
+    ctx.globalAlpha =
+      p.life;
+
+    ctx.fillStyle =
+      "#45ff9a";
+
+    ctx.fillRect(
+      p.x,
+      p.y,
+      p.size,
+      p.size
+    );
+
+  }
+
+  ctx.globalAlpha = 1;
+
+}
+
+
+/* =====================================================
+   GAME OVER
+===================================================== */
+
+async function endGame(){
+
+  if(!gameRunning)
+    return;
+
+  gameRunning = false;
+
+  const oldBest =
+    player.highscore;
+
+  if(
+    gameScore >
+    player.highscore
+  ){
+
+    player.highscore =
+      gameScore;
+
+  }
+
+  /*
+    Coins werden lokal hinzugefügt.
+  */
+
+  player.coins +=
+    runCoins;
+
+  highscoreEl.textContent =
+    player.highscore;
+
+  coinsEl.textContent =
+    player.coins;
+
+  finalScore.textContent =
+    gameScore.toLocaleString(
+      "de-DE"
+    );
+
+  finalBest.textContent =
+    player.highscore.toLocaleString(
+      "de-DE"
+    );
+
+  finalCoins.textContent =
+    runCoins;
+
+
+  /*
+    Sichere Highscore-Funktion.
+  */
+
+  if(
+    gameScore >
+    oldBest
+  ){
+
+    await saveHighscore(
+      gameScore
+    );
+
+  }
+
+
+  /*
+    Spielerdaten lokal / Firestore.
+  */
+
+  if(currentUser){
+
+    try{
+
+      await setDoc(
+
+        doc(
+          db,
+          "players",
+          currentUser.uid
+        ),
+
+        {
+          name:
+            player.name,
+
+          coins:
+            player.coins,
+
+          skin:
+            player.skin,
+
+          ownedSkins:
+            player.ownedSkins
+
+        },
+
+        {
+          merge:true
+        }
+
+      );
+
+    }catch(error){
+
+      console.warn(
+        "Spielerdaten konnten nicht gespeichert werden.",
+        error
+      );
+
+    }
+
+  }
+
+  gameOver.classList.remove(
+    "hidden"
+  );
+
+}
+
+
+/* =====================================================
+   RETRY
+===================================================== */
+
+retryBtn.addEventListener(
+  "click",
+  () => {
+
+    startGame();
+
+  }
+);
+
+
+backBtn.addEventListener(
+  "click",
+  () => {
+
+    gameOver.classList.add(
+      "hidden"
+    );
+
+    startPanel.classList.remove(
+      "hidden"
+    );
+
+  }
+);
+
+
+/* =====================================================
+   SHOP
+===================================================== */
+
+function renderShop(){
+
+  shopGrid.innerHTML = "";
+
+  for(
+    const skin of skins
+  ){
+
+    const owned =
+      player.ownedSkins
+        .includes(skin.id);
+
+    const selected =
+      player.skin === skin.id;
+
+    const div =
+      document.createElement(
+        "div"
+      );
+
+    div.className =
+      "skin";
+
+    div.innerHTML = `
+
+      <div
+        class="skinPreview"
+        style="background:${skin.color};
+        box-shadow:0 0 25px ${skin.color}">
+      </div>
+
+      <div class="skinName">
+        ${skin.name}
+      </div>
+
+      <div class="skinPrice">
+        ${
+          skin.price === 0
+            ? "STARTER"
+            : skin.price+" COINS"
+        }
+      </div>
+
+      <button
+        class="${owned ? "owned" : ""}"
+      >
+        ${
+          selected
+            ? "AUSGEWÄHLT"
+            : owned
+              ? "AUSWÄHLEN"
+              : "KAUFEN"
+        }
+      </button>
+
+    `;
+
+    const button =
+      div.querySelector(
+        "button"
+      );
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        if(owned){
+
+          player.skin =
+            skin.id;
+
+          savePlayer();
+
+          renderShop();
+
+          return;
+
+        }
+
+        if(
+          player.coins <
+          skin.price
+        ){
+
+          alert(
+            "Du brauchst mehr Coins!"
+          );
+
+          return;
+
+        }
+
+        player.coins -=
+          skin.price;
+
+        player.ownedSkins.push(
+          skin.id
+        );
+
+        player.skin =
+          skin.id;
+
+        coinsEl.textContent =
+          player.coins;
+
+        savePlayer();
+
+        renderShop();
+
+      }
+    );
+
+    shopGrid.appendChild(
+      div
+    );
+
+  }
+
+}
+
+
+async function savePlayer(){
+
+  if(!currentUser)
+    return;
+
+  try{
+
+    await setDoc(
+
+      doc(
+        db,
+        "players",
+        currentUser.uid
+      ),
+
+      {
+        name:
+          player.name,
+
+        coins:
+          player.coins,
+
+        skin:
+          player.skin,
+
+        ownedSkins:
+          player.ownedSkins
+
+      },
+
+      {
+        merge:true
+      }
+
+    );
+
+  }catch(error){
+
+    console.error(
+      "Speichern:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   MODALS
+===================================================== */
+
+shopBtn.addEventListener(
+  "click",
+  () => {
+
+    renderShop();
+
+    document
+      .getElementById("shopModal")
+      .classList.remove(
+        "hidden"
+      );
+
+  }
+);
+
+
+rankingBtn.addEventListener(
+  "click",
+  () => {
+
+    document
+      .getElementById("rankingModal")
+      .classList.remove(
+        "hidden"
+      );
+
+  }
+);
+
+
+window.closeModal =
+function(id){
+
+  document
+    .getElementById(id)
+    .classList.add(
+      "hidden"
+    );
+
+};
+
+
+/* ESC */
+
+window.addEventListener(
+  "keydown",
+  e => {
+
+    if(e.key === "Escape"){
+
+      document
+        .querySelectorAll(".modal")
+        .forEach(
+          m =>
+            m.classList.add(
+              "hidden"
+            )
+        );
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   INITIAL
+===================================================== */
+
+highscoreEl.textContent = "0";
+coinsEl.textContent = "0";
 
 </script>
 
 </body>
 </html>
-```
