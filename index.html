@@ -1,0 +1,1406 @@
+```html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050509">
+<title>GEOMETRY RUSH</title>
+
+<style>
+*{box-sizing:border-box}
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#050509;
+    color:white;
+    font-family:Inter,system-ui,Arial,sans-serif;
+    user-select:none;
+}
+body{
+    background:
+      radial-gradient(circle at 50% 25%,#18223b 0,#090b13 35%,#030305 75%);
+}
+button{
+    border:0;
+    cursor:pointer;
+    color:white;
+    font:inherit;
+}
+.hidden{display:none!important}
+
+/* LOGIN */
+
+#login{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(circle at center,#162b3a 0,#08090e 45%,#020204 100%);
+    z-index:100;
+}
+.loginBox{
+    width:min(430px,90vw);
+    padding:42px;
+    border:1px solid rgba(69,255,154,.25);
+    border-radius:28px;
+    background:rgba(8,12,18,.78);
+    backdrop-filter:blur(25px);
+    box-shadow:
+      0 0 80px rgba(69,255,154,.08),
+      inset 0 0 40px rgba(255,255,255,.02);
+    text-align:center;
+}
+.logo{
+    font-size:42px;
+    font-weight:1000;
+    letter-spacing:5px;
+}
+.green{color:#45ff9a}
+.sub{
+    opacity:.55;
+    margin:10px 0 30px;
+}
+.google{
+    width:100%;
+    padding:15px;
+    border-radius:14px;
+    background:#fff;
+    color:#111;
+    font-weight:800;
+}
+
+/* APP */
+
+#app{
+    position:fixed;
+    inset:0;
+}
+
+canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+}
+
+.hud{
+    position:absolute;
+    left:18px;
+    right:18px;
+    top:16px;
+    display:flex;
+    justify-content:space-between;
+    pointer-events:none;
+    z-index:10;
+}
+.stat{
+    min-width:115px;
+    padding:11px 15px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:15px;
+    background:rgba(5,7,12,.7);
+    backdrop-filter:blur(12px);
+}
+.label{
+    font-size:10px;
+    letter-spacing:2px;
+    opacity:.45;
+}
+.value{
+    font-size:22px;
+    font-weight:900;
+    margin-top:2px;
+}
+
+.topButtons{
+    position:absolute;
+    right:18px;
+    bottom:18px;
+    display:flex;
+    gap:10px;
+    z-index:20;
+}
+.uiBtn{
+    padding:12px 16px;
+    border-radius:13px;
+    background:rgba(8,12,18,.82);
+    border:1px solid rgba(255,255,255,.12);
+}
+.uiBtn:hover{
+    border-color:#45ff9a;
+}
+
+#startScreen,
+#shop,
+#ranking{
+    position:absolute;
+    inset:0;
+    z-index:30;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(2,3,6,.76);
+    backdrop-filter:blur(12px);
+}
+
+.panel{
+    width:min(760px,92vw);
+    max-height:86vh;
+    overflow:auto;
+    padding:30px;
+    border-radius:26px;
+    border:1px solid rgba(69,255,154,.2);
+    background:rgba(8,12,18,.92);
+    box-shadow:0 0 90px rgba(69,255,154,.06);
+}
+.panel h1{
+    margin:0 0 7px;
+    font-size:34px;
+}
+.panel p{
+    opacity:.55;
+}
+
+.startButton{
+    margin-top:22px;
+    width:100%;
+    padding:17px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#45ff9a,#19cfff);
+    color:#02110b;
+    font-weight:1000;
+    font-size:18px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+    gap:12px;
+    margin-top:20px;
+}
+.skin{
+    padding:15px;
+    border-radius:17px;
+    background:#0d1119;
+    border:1px solid rgba(255,255,255,.1);
+    text-align:center;
+}
+.skinPreview{
+    width:55px;
+    height:55px;
+    margin:0 auto 10px;
+    transform:rotate(45deg);
+    border-radius:8px;
+}
+.skin button{
+    width:100%;
+    margin-top:10px;
+    padding:9px;
+    border-radius:10px;
+    background:#171d27;
+}
+.skin button:hover{
+    background:#45ff9a;
+    color:#001108;
+}
+
+.rank{
+    display:grid;
+    grid-template-columns:55px 1fr 110px;
+    gap:10px;
+    align-items:center;
+    padding:14px;
+    margin:8px 0;
+    border-radius:13px;
+    background:#0d1119;
+    border:1px solid rgba(255,255,255,.06);
+}
+.rank.me{
+    border-color:#45ff9a;
+    box-shadow:0 0 20px rgba(69,255,154,.08);
+}
+.rankPos{
+    font-weight:1000;
+    font-size:20px;
+}
+.rankName{
+    font-weight:800;
+}
+.rankScore{
+    text-align:right;
+    font-weight:1000;
+    color:#45ff9a;
+}
+
+.close{
+    float:right;
+    background:#171d27;
+    padding:8px 12px;
+    border-radius:10px;
+}
+
+#death{
+    position:absolute;
+    inset:0;
+    z-index:25;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(2,2,5,.72);
+    backdrop-filter:blur(8px);
+}
+.deathBox{
+    text-align:center;
+    padding:35px;
+}
+.deathBox h1{
+    font-size:55px;
+    margin:0;
+}
+.new{
+    color:#45ff9a;
+    font-weight:900;
+}
+.coin{
+    color:#ffd84d;
+}
+
+#mobileJump{
+    position:absolute;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:rgba(69,255,154,.08);
+    border:2px solid rgba(69,255,154,.4);
+    color:#45ff9a;
+    font-weight:1000;
+    z-index:15;
+    display:none;
+}
+
+@media(max-width:700px){
+    .hud{left:8px;right:8px}
+    .stat{min-width:90px;padding:8px}
+    .value{font-size:18px}
+    #mobileJump{display:block}
+    .topButtons{bottom:160px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="login">
+    <div class="loginBox">
+        <div class="logo">GEOMETRY <span class="green">RUSH</span></div>
+        <div class="sub">Endless. Faster. Harder.</div>
+        <button class="google" id="googleLogin">
+            Mit Google spielen
+        </button>
+        <p id="loginStatus"></p>
+    </div>
+</div>
+
+<div id="app" class="hidden">
+
+<canvas id="game"></canvas>
+
+<div class="hud">
+    <div class="stat">
+        <div class="label">SCORE</div>
+        <div class="value" id="score">0</div>
+    </div>
+
+    <div class="stat">
+        <div class="label">HIGHSCORE</div>
+        <div class="value green" id="highscore">0</div>
+    </div>
+
+    <div class="stat">
+        <div class="label">COINS</div>
+        <div class="value coin" id="coins">0</div>
+    </div>
+</div>
+
+<div id="startScreen">
+    <div class="panel">
+        <h1>GEOMETRY <span class="green">RUSH</span></h1>
+        <p>
+            Springe über Hindernisse, sammle Coins und überlebe so lange wie möglich.
+            Das Level wird kontinuierlich schneller.
+        </p>
+
+        <button class="startButton" id="startButton">
+            START RUN
+        </button>
+    </div>
+</div>
+
+<div id="death">
+    <div class="deathBox">
+        <h1>CRASH</h1>
+        <p>Score: <b id="finalScore">0</b></p>
+        <p id="newRecord" class="new hidden">NEUER HIGHSCORE!</p>
+        <button class="startButton" id="restartButton">
+            NOCHMAL
+        </button>
+    </div>
+</div>
+
+<div id="shop">
+    <div class="panel">
+        <button class="close" id="closeShop">×</button>
+        <h1>SKIN SHOP</h1>
+        <p>Coins: <b class="coin" id="shopCoins">0</b></p>
+        <div class="cards" id="skinList"></div>
+    </div>
+</div>
+
+<div id="ranking">
+    <div class="panel">
+        <button class="close" id="closeRanking">×</button>
+        <h1>GLOBAL <span class="green">RANKING</span></h1>
+        <p>Die echten Highscores aller Spieler.</p>
+        <div id="rankingList">Lade Rangliste...</div>
+    </div>
+</div>
+
+<div class="topButtons">
+    <button class="uiBtn" id="shopButton">SKINS</button>
+    <button class="uiBtn" id="rankingButton">RANGLISTE</button>
+</div>
+
+<button id="mobileJump">JUMP</button>
+
+</div>
+
+<script type="module">
+
+/* ============================================================
+   FIREBASE
+   ============================================================ */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    collection,
+    query,
+    orderBy,
+    limit,
+    getDocs,
+    onSnapshot
+}
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+import {
+    getFunctions,
+    httpsCallable
+}
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-functions.js";
+
+/*
+   HIER DEINE FIREBASE CONFIG EINTRAGEN.
+*/
+
+const firebaseConfig = {
+    apiKey: "DEINE_API_KEY",
+    authDomain: "DEIN_PROJEKT.firebaseapp.com",
+    projectId: "DEIN_PROJEKT",
+    storageBucket: "DEIN_PROJEKT.firebasestorage.app",
+    messagingSenderId: "DEINE_MESSAGING_ID",
+    appId: "DEINE_APP_ID"
+};
+
+const appFirebase = initializeApp(firebaseConfig);
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
+const functions = getFunctions(appFirebase);
+
+const submitScore = httpsCallable(functions,"submitScore");
+
+let currentUser = null;
+let playerData = {
+    coins:0,
+    highscore:0,
+    skin:"green"
+};
+
+const login = document.getElementById("login");
+const gameApp = document.getElementById("app");
+
+document.getElementById("googleLogin").onclick = async () => {
+    try{
+        document.getElementById("loginStatus").textContent =
+            "Anmeldung läuft...";
+
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth,provider);
+
+    }catch(error){
+        console.error(error);
+        document.getElementById("loginStatus").textContent =
+            "Anmeldung fehlgeschlagen.";
+    }
+};
+
+onAuthStateChanged(auth, async user => {
+
+    if(!user) return;
+
+    currentUser = user;
+
+    login.classList.add("hidden");
+    gameApp.classList.remove("hidden");
+
+    await loadPlayer();
+
+    listenRanking();
+});
+
+async function loadPlayer(){
+
+    const ref = doc(db,"players",currentUser.uid);
+    const snap = await getDoc(ref);
+
+    if(!snap.exists()){
+
+        playerData = {
+            coins:0,
+            highscore:0,
+            skin:"green",
+            name:currentUser.displayName || "Player"
+        };
+
+        await setDoc(ref,playerData);
+
+    }else{
+        playerData = snap.data();
+    }
+
+    updateUI();
+}
+
+function updateUI(){
+
+    document.getElementById("coins").textContent =
+        playerData.coins || 0;
+
+    document.getElementById("highscore").textContent =
+        playerData.highscore || 0;
+
+    document.getElementById("shopCoins").textContent =
+        playerData.coins || 0;
+}
+
+
+/* ============================================================
+   RANGLISTE
+   ============================================================ */
+
+let rankingUnsubscribe = null;
+
+function listenRanking(){
+
+    const q = query(
+        collection(db,"players"),
+        orderBy("highscore","desc"),
+        limit(100)
+    );
+
+    if(rankingUnsubscribe)
+        rankingUnsubscribe();
+
+    rankingUnsubscribe = onSnapshot(q,snapshot => {
+
+        const list = document.getElementById("rankingList");
+
+        list.innerHTML = "";
+
+        let position = 1;
+
+        snapshot.forEach(docSnap => {
+
+            const p = docSnap.data();
+
+            const row = document.createElement("div");
+
+            row.className =
+                "rank " +
+                (docSnap.id === currentUser.uid ? "me":"");
+
+            row.innerHTML = `
+                <div class="rankPos">#${position}</div>
+                <div class="rankName">
+                    ${escapeHtml(p.name || "Player")}
+                </div>
+                <div class="rankScore">
+                    ${Number(p.highscore || 0).toLocaleString("de-DE")}
+                </div>
+            `;
+
+            list.appendChild(row);
+
+            position++;
+        });
+
+        if(!snapshot.size){
+            list.innerHTML = "Noch keine Spieler.";
+        }
+
+    },error=>{
+        console.error(error);
+        document.getElementById("rankingList").textContent =
+            "Rangliste konnte nicht geladen werden.";
+    });
+}
+
+function escapeHtml(value){
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+/* ============================================================
+   SPIEL
+   ============================================================ */
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let W,H;
+
+function resize(){
+
+    W = canvas.width = innerWidth * devicePixelRatio;
+    H = canvas.height = innerHeight * devicePixelRatio;
+
+    canvas.style.width = innerWidth+"px";
+    canvas.style.height = innerHeight+"px";
+
+    ctx.setTransform(
+        devicePixelRatio,0,0,
+        devicePixelRatio,0,0
+    );
+
+    W = innerWidth;
+    H = innerHeight;
+}
+
+addEventListener("resize",resize);
+resize();
+
+let running = false;
+let dead = false;
+
+let player;
+let obstacles = [];
+let particles = [];
+let coinsOnMap = [];
+
+let score = 0;
+let distance = 0;
+let gameSpeed = 6;
+let gravity = .8;
+let jumpPower = -14;
+
+let lastTime = 0;
+let spawnTimer = 0;
+let coinTimer = 0;
+
+
+/* ============================================================
+   SKINS
+   ============================================================ */
+
+const skins = [
+
+    {
+        id:"green",
+        name:"NEON",
+        cost:0,
+        color:"#45ff9a"
+    },
+
+    {
+        id:"blue",
+        name:"CYBER",
+        cost:100,
+        color:"#29a7ff"
+    },
+
+    {
+        id:"purple",
+        name:"VOID",
+        cost:250,
+        color:"#bd5cff"
+    },
+
+    {
+        id:"red",
+        name:"INFERNO",
+        cost:500,
+        color:"#ff4d68"
+    },
+
+    {
+        id:"gold",
+        name:"GOLD",
+        cost:1000,
+        color:"#ffd84d"
+    }
+];
+
+function renderSkins(){
+
+    const list = document.getElementById("skinList");
+
+    list.innerHTML = "";
+
+    skins.forEach(skin => {
+
+        const owned =
+            skin.cost === 0 ||
+            playerData["skin_"+skin.id] === true;
+
+        const active =
+            playerData.skin === skin.id;
+
+        const div = document.createElement("div");
+
+        div.className = "skin";
+
+        div.innerHTML = `
+            <div class="skinPreview"
+                 style="background:${skin.color};
+                        box-shadow:0 0 25px ${skin.color}">
+            </div>
+
+            <b>${skin.name}</b>
+
+            <div class="coin">
+                ${owned ? "FREIGESCHALTET" :
+                  skin.cost+" COINS"}
+            </div>
+
+            <button>
+                ${active ? "AKTIV" :
+                  owned ? "AUSWÄHLEN" : "KAUFEN"}
+            </button>
+        `;
+
+        div.querySelector("button").onclick =
+            () => selectSkin(skin);
+
+        list.appendChild(div);
+    });
+}
+
+async function selectSkin(skin){
+
+    const owned =
+        skin.cost === 0 ||
+        playerData["skin_"+skin.id] === true;
+
+    if(owned){
+
+        playerData.skin = skin.id;
+
+    }else{
+
+        if(playerData.coins < skin.cost){
+            alert("Nicht genug Coins!");
+            return;
+        }
+
+        playerData.coins -= skin.cost;
+        playerData["skin_"+skin.id] = true;
+        playerData.skin = skin.id;
+    }
+
+    await setDoc(
+        doc(db,"players",currentUser.uid),
+        playerData,
+        {merge:true}
+    );
+
+    renderSkins();
+    updateUI();
+}
+
+
+/* ============================================================
+   GAME
+   ============================================================ */
+
+function resetGame(){
+
+    player = {
+        x:100,
+        y:H-180,
+        size:34,
+        vy:0,
+        grounded:false,
+        rotation:0
+    };
+
+    obstacles = [];
+    particles = [];
+    coinsOnMap = [];
+
+    score = 0;
+    distance = 0;
+
+    gameSpeed = 6;
+    spawnTimer = 0;
+    coinTimer = 0;
+
+    dead = false;
+}
+
+function startGame(){
+
+    document.getElementById("startScreen")
+        .classList.add("hidden");
+
+    document.getElementById("death")
+        .style.display = "none";
+
+    resetGame();
+
+    running = true;
+
+    requestAnimationFrame(loop);
+}
+
+function jump(){
+
+    if(!running || dead) return;
+
+    if(player.grounded){
+
+        player.vy = jumpPower;
+        player.grounded = false;
+
+        burst(
+            player.x+player.size/2,
+            player.y+player.size,
+            12
+        );
+    }
+}
+
+addEventListener("keydown",e=>{
+
+    if(
+        e.code === "Space" ||
+        e.code === "ArrowUp" ||
+        e.code === "KeyW"
+    ){
+        e.preventDefault();
+        jump();
+    }
+});
+
+canvas.addEventListener("pointerdown",jump);
+document.getElementById("mobileJump").onclick = jump;
+
+function spawnObstacle(){
+
+    const difficulty =
+        Math.min(score / 1500,1);
+
+    const height =
+        30 + Math.random()*75;
+
+    const width =
+        25 + Math.random()*35;
+
+    obstacles.push({
+
+        x:W+50,
+
+        y:H-90-height,
+
+        w:width,
+
+        h:height,
+
+        spike:
+            Math.random() <
+            .45 + difficulty*.25
+    });
+}
+
+function spawnCoin(){
+
+    coinsOnMap.push({
+
+        x:W+40,
+
+        y:H-160-Math.random()*230,
+
+        r:8,
+
+        rot:0
+    });
+}
+
+function update(dt){
+
+    const difficulty =
+        Math.min(score / 2500,1);
+
+    /*
+      Geschwindigkeit steigt immer weiter.
+      Später wird das Spiel absichtlich extrem schwer.
+    */
+    gameSpeed =
+        6 +
+        Math.pow(score/450,1.15);
+
+    gameSpeed =
+        Math.min(gameSpeed,18);
+
+    player.vy += gravity;
+
+    player.y += player.vy;
+
+    const ground =
+        H-90-player.size;
+
+    if(player.y >= ground){
+
+        player.y = ground;
+        player.vy = 0;
+        player.grounded = true;
+        player.rotation = 0;
+
+    }else{
+
+        player.rotation += .12;
+    }
+
+    spawnTimer -= dt;
+    coinTimer -= dt;
+
+    const spawnInterval =
+        Math.max(
+            330 -
+            difficulty*160 -
+            Math.min(score/15,100),
+            90
+        );
+
+    if(spawnTimer <= 0){
+
+        spawnObstacle();
+
+        spawnTimer = spawnInterval;
+
+        /*
+          Höhere Schwierigkeit:
+          zusätzliche Hindernisse
+        */
+        if(score > 1000 && Math.random()<.18)
+            setTimeout(spawnObstacle,120);
+    }
+
+    if(coinTimer <= 0){
+
+        spawnCoin();
+
+        coinTimer =
+            700 + Math.random()*900;
+    }
+
+    for(const o of obstacles){
+
+        o.x -= gameSpeed;
+    }
+
+    for(const c of coinsOnMap){
+
+        c.x -= gameSpeed;
+        c.rot += .08;
+    }
+
+    obstacles =
+        obstacles.filter(o=>o.x+o.w>-100);
+
+    coinsOnMap =
+        coinsOnMap.filter(c=>c.x>-50);
+
+    checkCollisions();
+
+    for(const p of particles){
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += .04;
+        p.life -= .02;
+    }
+
+    particles =
+        particles.filter(p=>p.life>0);
+
+    distance += gameSpeed;
+
+    score =
+        Math.floor(distance/10);
+
+    document.getElementById("score")
+        .textContent = score;
+}
+
+function checkCollisions(){
+
+    const px = player.x;
+    const py = player.y;
+    const ps = player.size;
+
+    for(const o of obstacles){
+
+        if(
+
+            px < o.x+o.w &&
+            px+ps > o.x &&
+            py < o.y+o.h &&
+            py+ps > o.y
+
+        ){
+
+            die();
+            return;
+        }
+    }
+
+    for(let i=coinsOnMap.length-1;i>=0;i--){
+
+        const c = coinsOnMap[i];
+
+        const dx =
+            px+ps/2-c.x;
+
+        const dy =
+            py+ps/2-c.y;
+
+        if(Math.sqrt(dx*dx+dy*dy)<30){
+
+            coinsOnMap.splice(i,1);
+
+            playerData.coins =
+                (playerData.coins||0)+1;
+
+            burst(c.x,c.y,16);
+
+            updateUI();
+
+            setDoc(
+                doc(db,"players",currentUser.uid),
+                {
+                    coins:playerData.coins
+                },
+                {merge:true}
+            );
+        }
+    }
+}
+
+async function die(){
+
+    if(dead) return;
+
+    dead = true;
+    running = false;
+
+    document.getElementById("finalScore")
+        .textContent = score;
+
+    const oldHigh =
+        Number(playerData.highscore||0);
+
+    document.getElementById("newRecord")
+        .classList.toggle(
+            "hidden",
+            score <= oldHigh
+        );
+
+    if(score > oldHigh){
+
+        /*
+          Score wird NICHT direkt in Firestore geschrieben.
+          Er geht über die serverseitige Cloud Function.
+        */
+
+        try{
+
+            const result =
+                await submitScore({
+                    score:score
+                });
+
+            const data = result.data;
+
+            if(data.accepted){
+
+                playerData.highscore =
+                    data.highscore;
+
+                updateUI();
+            }
+
+        }catch(error){
+
+            console.error(
+                "Score konnte nicht gespeichert werden:",
+                error
+            );
+        }
+    }
+
+    document.getElementById("death")
+        .style.display = "flex";
+}
+
+
+/* ============================================================
+   DRAW
+   ============================================================ */
+
+function draw(){
+
+    ctx.clearRect(0,0,W,H);
+
+    /*
+      Hintergrund
+    */
+
+    const gradient =
+        ctx.createLinearGradient(0,0,0,H);
+
+    gradient.addColorStop(0,"#070b16");
+    gradient.addColorStop(1,"#020205");
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0,0,W,H);
+
+    /*
+      Grid
+    */
+
+    ctx.strokeStyle =
+        "rgba(69,255,154,.06)";
+
+    ctx.lineWidth = 1;
+
+    const offset =
+        -(distance % 50);
+
+    for(let x=offset;x<W;x+=50){
+
+        ctx.beginPath();
+        ctx.moveTo(x,0);
+        ctx.lineTo(x,H);
+        ctx.stroke();
+    }
+
+    for(let y=0;y<H;y+=50){
+
+        ctx.beginPath();
+        ctx.moveTo(0,y);
+        ctx.lineTo(W,y);
+        ctx.stroke();
+    }
+
+    /*
+      Boden
+    */
+
+    ctx.fillStyle="#0a1017";
+    ctx.fillRect(0,H-90,W,90);
+
+    ctx.strokeStyle="#45ff9a";
+    ctx.shadowBlur=15;
+    ctx.shadowColor="#45ff9a";
+
+    ctx.beginPath();
+    ctx.moveTo(0,H-90);
+    ctx.lineTo(W,H-90);
+    ctx.stroke();
+
+    ctx.shadowBlur=0;
+
+    /*
+      Hindernisse
+    */
+
+    for(const o of obstacles){
+
+        ctx.save();
+
+        ctx.translate(
+            o.x+o.w/2,
+            o.y+o.h/2
+        );
+
+        if(o.spike){
+
+            ctx.fillStyle="#ff315f";
+            ctx.shadowColor="#ff315f";
+            ctx.shadowBlur=18;
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                -o.w/2,
+                o.h/2
+            );
+
+            ctx.lineTo(
+                0,
+                -o.h/2
+            );
+
+            ctx.lineTo(
+                o.w/2,
+                o.h/2
+            );
+
+            ctx.closePath();
+            ctx.fill();
+
+        }else{
+
+            ctx.fillStyle="#6c3cff";
+            ctx.shadowColor="#6c3cff";
+            ctx.shadowBlur=20;
+
+            ctx.fillRect(
+                -o.w/2,
+                -o.h/2,
+                o.w,
+                o.h
+            );
+        }
+
+        ctx.restore();
+    }
+
+    /*
+      Coins
+    */
+
+    for(const c of coinsOnMap){
+
+        ctx.save();
+
+        ctx.translate(c.x,c.y);
+        ctx.rotate(c.rot);
+
+        ctx.fillStyle="#ffd84d";
+        ctx.shadowColor="#ffd84d";
+        ctx.shadowBlur=20;
+
+        ctx.beginPath();
+        ctx.arc(0,0,c.r,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    /*
+      Partikel
+    */
+
+    for(const p of particles){
+
+        ctx.globalAlpha =
+            Math.max(p.life,0);
+
+        ctx.fillStyle=p.color;
+
+        ctx.fillRect(
+            p.x,
+            p.y,
+            p.size,
+            p.size
+        );
+    }
+
+    ctx.globalAlpha=1;
+
+    /*
+      Player
+    */
+
+    if(player){
+
+        const skin =
+            skins.find(
+                s=>s.id===playerData.skin
+            ) || skins[0];
+
+        ctx.save();
+
+        ctx.translate(
+            player.x+player.size/2,
+            player.y+player.size/2
+        );
+
+        ctx.rotate(player.rotation);
+
+        ctx.fillStyle=skin.color;
+        ctx.shadowColor=skin.color;
+        ctx.shadowBlur=30;
+
+        ctx.fillRect(
+            -player.size/2,
+            -player.size/2,
+            player.size,
+            player.size
+        );
+
+        ctx.fillStyle="#06100b";
+
+        ctx.fillRect(
+            -8,
+            -8,
+            5,
+            5
+        );
+
+        ctx.fillRect(
+            4,
+            -8,
+            5,
+            5
+        );
+
+        ctx.restore();
+    }
+}
+
+function burst(x,y,count){
+
+    for(let i=0;i<count;i++){
+
+        particles.push({
+
+            x,
+            y,
+
+            vx:
+                (Math.random()-.5)*7,
+
+            vy:
+                (Math.random()-.5)*7,
+
+            size:
+                2+Math.random()*5,
+
+            life:1,
+
+            color:
+                Math.random()>.5
+                ? "#45ff9a"
+                : "#19cfff"
+        });
+    }
+}
+
+function loop(time){
+
+    if(!running) return;
+
+    const dt =
+        Math.min(
+            time-lastTime,
+            50
+        );
+
+    lastTime=time;
+
+    update(dt);
+    draw();
+
+    requestAnimationFrame(loop);
+}
+
+
+/* ============================================================
+   UI
+   ============================================================ */
+
+document.getElementById("startButton")
+    .onclick=startGame;
+
+document.getElementById("restartButton")
+    .onclick=startGame;
+
+document.getElementById("shopButton")
+    .onclick=()=>{
+
+        renderSkins();
+
+        document.getElementById("shop")
+            .style.display="flex";
+    };
+
+document.getElementById("closeShop")
+    .onclick=()=>{
+
+        document.getElementById("shop")
+            .style.display="none";
+    };
+
+document.getElementById("rankingButton")
+    .onclick=()=>{
+
+        document.getElementById("ranking")
+            .style.display="flex";
+    };
+
+document.getElementById("closeRanking")
+    .onclick=()=>{
+
+        document.getElementById("ranking")
+            .style.display="none";
+    };
+
+document.getElementById("shop")
+    .style.display="none";
+
+document.getElementById("ranking")
+    .style.display="none";
+
+</script>
+
+</body>
+</html>
+```
